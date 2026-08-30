@@ -529,18 +529,38 @@
             actualizarSlider();
         }
 
-        function actualizarSlider() {
-            const b64Before = localStorage.getItem('enso_img_before');
-            const b64After = localStorage.getItem('enso_img_after');
+function actualizarSlider() {
+    const b64Before = localStorage.getItem('enso_img_before');
+    const b64After = localStorage.getItem('enso_img_after');
 
-            if (b64Before && b64After) {
-                document.getElementById('slider-img-before').src = b64Before;
-                document.getElementById('slider-img-after').src = b64After;
-                document.getElementById('slider-box').style.display = 'block';
-                document.getElementById('val-lum').innerText = "+34%";
-                document.getElementById('val-hyd').innerText = "Optimo";
-            }
+    if (b64Before && b64After) {
+        document.getElementById('slider-img-before').src = b64Before;
+        document.getElementById('slider-img-after').src = b64After;
+        document.getElementById('slider-box').style.display = 'block';
+
+        // CÁLCULO DINÁMICO SEGÚN DÍAS TRANSCURRIDOS
+        let fechaInicio = localStorage.getItem('enso_inicio_fecha');
+        if (!fechaInicio) {
+            fechaInicio = Date.now();
+            localStorage.setItem('enso_inicio_fecha', fechaInicio);
         }
+
+        const dias = Math.max(1, Math.floor((Date.now() - fechaInicio) / (1000 * 60 * 60 * 24)));
+        
+        // Algoritmo de evolución Progresiva
+        let lumCalculada = Math.min(52, 12 + Math.floor(dias * 1.4));
+        let estadoHidratacion = dias < 7 ? "En Balance" : "Óptimo";
+        let redInflamacion = Math.min(65, 15 + Math.floor(dias * 1.8));
+
+        document.getElementById('val-lum').innerText = "+" + lumCalculada + "%";
+        document.getElementById('val-hyd').innerText = estadoHidratacion;
+        
+        // Muestra la reducción de micro-inflamación si existe el elemento
+        if(document.getElementById('val-inf')) {
+            document.getElementById('val-inf').innerText = "-" + redInflamacion + "%";
+        }
+    }
+}
 
         function moverSlider(val) {
             document.getElementById('slider-img-after-wrapper').style.width = val + "%";
