@@ -59,7 +59,7 @@
             text-transform: uppercase;
         }
 
-        /* MODAL DE BIENVENIDA CON LOGO */
+        /* MODAL DE BIENVENIDA */
         .auth-overlay {
             position: fixed;
             top: 0;
@@ -120,10 +120,6 @@
             outline: none;
         }
 
-        .auth-input:focus {
-            border-color: var(--enso-green);
-        }
-
         .btn-activate {
             width: 100%;
             background: var(--enso-green);
@@ -136,10 +132,6 @@
             letter-spacing: 1px;
             cursor: pointer;
             margin-top: 5px;
-        }
-
-        .btn-activate:hover {
-            background: #23322a;
         }
 
         .container {
@@ -260,44 +252,112 @@
             cursor: pointer;
         }
 
-        .chart-container {
-            display: flex;
-            align-items: flex-end;
+        /* COMPONENTES DEL GLOW JOURNAL */
+        .journal-upload-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 20px;
-            height: 150px;
-            margin: 25px 0 10px 0;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--enso-light-green);
+            margin-bottom: 25px;
         }
 
-        .chart-bar-group {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            height: 100%;
-            justify-content: flex-end;
+        @media (max-width: 600px) {
+            .journal-upload-box {
+                grid-template-columns: 1fr;
+            }
         }
 
-        .chart-bar {
-            width: 100%;
-            max-width: 40px;
-            background: var(--enso-green);
-            border-radius: 4px 4px 0 0;
-            transition: height 0.5s ease;
-        }
-
-        .chart-label {
-            font-size: 10px;
-            color: #777;
-            margin-top: 8px;
+        .photo-slot {
+            background: var(--enso-bg);
+            border: 2px dashed var(--enso-light-green);
+            border-radius: 10px;
+            padding: 20px;
             text-align: center;
+            position: relative;
+        }
+
+        .photo-slot.active {
+            border-style: solid;
+            border-color: var(--enso-gold);
+        }
+
+        .photo-preview {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .upload-label {
+            background: var(--enso-green);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        /* SLIDER COMPARATIVO ANTES / DESPUÉS */
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: 320px;
+            overflow: hidden;
+            border-radius: 12px;
+            border: 1px solid var(--enso-gold);
+            margin: 20px 0;
+            display: none;
+        }
+
+        .slider-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .slider-img-after {
+            width: 50%;
+            z-index: 2;
+            border-right: 2px solid var(--enso-gold);
+        }
+
+        .slider-range {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            z-index: 3;
+            cursor: ew-resize;
+        }
+
+        .slider-badge {
+            position: absolute;
+            bottom: 12px;
+            background: rgba(44, 62, 53, 0.85);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            z-index: 4;
         }
     </style>
 </head>
 <body>
 
-    <!-- SCREEN DE ACTIVACIÓN CON LOGO INTEGRADO -->
     <div id="auth-modal" class="auth-overlay">
         <div class="auth-card">
             <img src="logo.png" alt="ensō logo" class="modal-logo" onerror="this.style.display='none'; document.getElementById('modal-alt-title').style.display='block';">
@@ -312,7 +372,6 @@
             <input type="text" id="vip-code" class="auth-input" placeholder="Código de Invitación o N° de Pedido" style="text-transform: uppercase;">
             
             <button class="btn-activate" onclick="validarAcceso()">ACTIVAR MI MEMBRESÍA VIP</button>
-            <div style="margin-top: 15px; font-size: 11px; color: #aaa;">¿No tienes un código? Adquiere tu kit en ensocare.com.co</div>
         </div>
     </div>
 
@@ -341,103 +400,69 @@
             <button class="tab-btn" onclick="openTab('equilibrio')">📈 HISTÓRICO MENTE-PIEL</button>
         </div>
 
-        <!-- PESTAÑA 1 -->
         <div id="tab-journal" class="tab-content active">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
-                <h3 style="color: var(--enso-green); margin:0;">Registro Fotográfico & Análisis de Textura</h3>
+                <h3 style="color: var(--enso-green); margin:0;">Registro Fotográfico & Comparador de Avance</h3>
                 <span class="vip-tag">Exclusivo Club</span>
             </div>
-            <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Sube tu foto semanal. Nuestro algoritmo analizará la simetría de luminosidad y la atenuación de líneas de tensión.</p>
+            <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Sube tu foto de la Semana 1 y tu foto de hoy. Las imágenes se guardan de forma privada en tu dispositivo para analizar la regeneración de tu piel.</p>
             
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px;">
-                <div class="vip-card" style="text-align: center;">
-                    <h4 style="margin:0 0 5px 0; color:var(--enso-green);">Foto Inicial (Semana 1)</h4>
-                    <p style="font-size:11px; color:#888;">Índice de Opacidad: 68%</p>
-                    <div style="width:100%; height:130px; background:#e0e0e0; border-radius:6px; margin:10px 0; display:flex; align-items:center; justify-content:center; font-size:12px; color:#666;">[ Imagen Base ]</div>
+            <div class="journal-upload-box">
+                <div class="photo-slot" id="slot-before">
+                    <h4 style="margin:0 0 8px 0; color:var(--enso-green);">Semana 1 (Antes)</h4>
+                    <img id="img-before-preview" class="photo-preview">
+                    <div id="ph-before-text" style="font-size:11px; color:#888; margin: 40px 0;">Sin imagen guardada</div>
+                    <label class="upload-label" for="file-before">SELECCIONAR FOTO</label>
+                    <input type="file" id="file-before" class="file-input" accept="image/*" onchange="guardarFoto('before', event)">
                 </div>
 
-                <div class="vip-card" style="text-align: center;">
-                    <h4 style="margin:0 0 5px 0; color:var(--enso-green);">Foto Actual (Semana 4)</h4>
-                    <p style="font-size:11px; color:var(--enso-gold); font-weight:bold;">Luminosidad: +34%</p>
-                    <div style="width:100%; height:130px; background:#d4dfd9; border-radius:6px; margin:10px 0; display:flex; align-items:center; justify-content:center; font-size:12px; color:var(--enso-green); font-weight:bold;">[ Avance Detectado ]</div>
+                <div class="photo-slot" id="slot-after">
+                    <h4 style="margin:0 0 8px 0; color:var(--enso-green);">Semana Actual (Hoy)</h4>
+                    <img id="img-after-preview" class="photo-preview">
+                    <div id="ph-after-text" style="font-size:11px; color:#888; margin: 40px 0;">Sin imagen guardada</div>
+                    <label class="upload-label" for="file-after">SELECCIONAR FOTO</label>
+                    <input type="file" id="file-after" class="file-input" accept="image/*" onchange="guardarFoto('after', event)">
                 </div>
+            </div>
 
-                <div class="vip-card" style="text-align: center; border: 2px dashed var(--enso-gold);">
-                    <h4 style="margin:0 0 5px 0; color:var(--enso-gold);">Nuevo Registro</h4>
-                    <p style="font-size:11px; color:#888;">Toma la foto de hoy con luz natural</p>
-                    <button class="btn-pro" style="margin-top:25px; width:100%;">TOMAR FOTO AHORA</button>
+            <div id="slider-box" class="slider-container">
+                <span class="slider-badge" style="left:12px;">SEMANA ACTUAL</span>
+                <span class="slider-badge" style="right:12px;">SEMANA 1</span>
+                <img id="slider-img-before" class="slider-img">
+                <div id="slider-img-after-wrapper" class="slider-img slider-img-after">
+                    <img id="slider-img-after" class="slider-img" style="width: 100%; height:100%; object-fit:cover;">
+                </div>
+                <input type="range" min="0" max="100" value="50" class="slider-range" oninput="moverSlider(this.value)">
+            </div>
+
+            <div class="vip-card" style="margin-top:20px;">
+                <h4 style="margin:0 0 8px 0; color:var(--enso-green);">Métricas de Calidad de Piel</h4>
+                <div style="display:flex; justify-content:space-around; text-align:center; font-size:12px;">
+                    <div>
+                        <div style="font-size:20px; font-weight:bold; color:var(--enso-gold);" id="val-lum">--</div>
+                        <div style="color:#777; font-size:10px;">LUMINOSIDAD</div>
+                    </div>
+                    <div>
+                        <div style="font-size:20px; font-weight:bold; color:var(--enso-green);" id="val-hyd">--</div>
+                        <div style="color:#777; font-size:10px;">HIDRATACIÓN</div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- PESTAÑA 2 -->
         <div id="tab-exposoma" class="tab-content">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
-                <h3 style="color: var(--enso-green); margin:0;">Alertas Climáticas Automatizadas</h3>
-                <span class="vip-tag">Exclusivo Club</span>
-            </div>
-            <p style="font-size: 13px; color: #666;">Como socio VIP, no necesitas consultar la web diariamente. Te enviamos el diagnóstico de exposoma a tu celular antes de salir de casa.</p>
-
-            <div class="vip-card">
-                <h4 style="margin:0 0 10px 0; color:var(--enso-green);"> Configuración de Notificación Diaria</h4>
-                <div style="display:flex; gap:10px; align-items:center; margin-bottom:15px;">
-                    <label style="font-size:12px;">Enviar reporte diario a mi WhatsApp a las:</label>
-                    <input type="time" value="07:00" style="padding:5px 10px; border:1px solid var(--enso-light-green); border-radius:4px;">
-                </div>
-                <div style="font-size:11px; color:#777; background:white; padding:10px; border-radius:6px;">
-                    <b>Último mensaje enviado hoy (7:00 AM):</b> "Hola 🌿. Hoy en tu zona el Índice UV está en 8.2 (Alto) y la humedad cayó al 42%. Sugerimos aplicar 2 gotas extra de Fresh Water antes de tu serum antioxidante."
-                </div>
-                <button class="btn-pro" style="margin-top:15px;" onclick="alert('Preferencia de Alertas WhatsApp Guardada')">GUARDAR PREFERENCIAS</button>
-            </div>
+            <h3 style="color: var(--enso-green); margin-top:0;">Alertas Climáticas Automatizadas</h3>
+            <p style="font-size: 13px; color: #666;">Te enviamos el diagnóstico del clima a tu celular antes de salir de casa.</p>
         </div>
 
-        <!-- PESTAÑA 3 -->
         <div id="tab-spa" class="tab-content">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
-                <h3 style="color: var(--enso-green); margin:0;">Rituales Guiados de Experiencia Completa</h3>
-                <span class="vip-tag">Exclusivo Club</span>
-            </div>
-            <p style="font-size: 13px; color: #666;">Accede a protocolos de masaje facial guiados de 7 a 10 minutos con locución profesional e integración de accesorios.</p>
-
-            <div class="vip-card">
-                <h4 style="margin:0 0 5px 0; color:var(--enso-green);">Ritual Gua Sha & Drenaje Linfático (8 min)</h4>
-                <p style="font-size:12px; color:#666;">Diseñado para esculpir el óvalo facial y liberar tensión acumulada en el cuello y la mandíbula.</p>
-                <button class="btn-pro" onclick="alert('Iniciando sesión guiada de 8 minutos con audio binaural Alfa...')">INICIAR SESIÓN PRO (8 MIN)</button>
-            </div>
-
-            <div class="vip-card">
-                <h4 style="margin:0 0 5px 0; color:var(--enso-green);">Ritual Anti-Estrés Nocturno & Mente Sana (10 min)</h4>
-                <p style="font-size:12px; color:#666;">Combina digitopuntura facial con técnicas de respiración 4-7-8 para conciliar el sueño mientras actúan los activos.</p>
-                <button class="btn-pro" onclick="alert('Iniciando sesión nocturna con ondas Delta...')">INICIAR SESIÓN NOCTURNA (10 MIN)</button>
-            </div>
+            <h3 style="color: var(--enso-green); margin-top:0;">Rituales Guiados de Experiencia Completa</h3>
+            <p style="font-size: 13px; color: #666;">Accede a protocolos de masaje facial guiados de 8 y 10 minutos.</p>
         </div>
 
-        <!-- PESTAÑA 4 -->
         <div id="tab-equilibrio" class="tab-content">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
-                <h3 style="color: var(--enso-green); margin:0;">Evolución del Índice de Estrés Cutáneo</h3>
-                <span class="vip-tag">Exclusivo Club</span>
-            </div>
-            <p style="font-size: 13px; color: #666;">Gráfica histórica de la reducción de cortisol e irritación neurogénica reflejada en tus cuestionarios semanales:</p>
-
-            <div class="chart-container">
-                <div class="chart-bar-group">
-                    <div class="chart-bar" style="height: 85%; background: #B84A39;"></div>
-                    <div class="chart-label">Mes 1<br><b>85 pts (Alto)</b></div>
-                </div>
-                <div class="chart-bar-group">
-                    <div class="chart-bar" style="height: 60%; background: #D99B26;"></div>
-                    <div class="chart-label">Mes 2<br><b>60 pts (Medio)</b></div>
-                </div>
-                <div class="chart-bar-group">
-                    <div class="chart-bar" style="height: 32%; background: var(--enso-green);"></div>
-                    <div class="chart-label">Mes 3 (Actual)<br><b>32 pts (Bajo)</b></div>
-                </div>
-            </div>
-
-            <div style="background:var(--enso-bg); padding:15px; border-radius:8px; margin-top:20px; font-size:12px; color:var(--enso-green);">
-                <b>Diagnóstico de Tu Progreso:</b> En 90 días has reducido un <b>62% el nivel de inflamación neurocutánea</b>. Tu barrera biológica se encuentra estable.
-            </div>
+            <h3 style="color: var(--enso-green); margin-top:0;">Evolución del Índice de Estrés Cutáneo</h3>
+            <p style="font-size: 13px; color: #666;">Gráfica histórica de la reducción de inflamación mente-piel.</p>
         </div>
     </div>
 
@@ -448,6 +473,7 @@
                 document.getElementById('auth-modal').style.display = 'none';
                 document.getElementById('welcome-title').innerText = "Bienvenida de nuevo, " + savedName;
             }
+            cargarFotosGuardadas();
         };
 
         function validarAcceso() {
@@ -465,8 +491,59 @@
 
             document.getElementById('welcome-title').innerText = "Bienvenida, " + name;
             document.getElementById('auth-modal').style.display = 'none';
+        }
 
-            alert('¡Membresía VIP Activada con Éxito! Disfruta de tus 90 días de acceso exclusivo al Glow Club.');
+        // LÓGICA DE FOTOS Y PERSISTENCIA EN LOCALSTORAGE
+        function guardarFoto(tipo, event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64Img = e.target.result;
+                localStorage.setItem('enso_img_' + tipo, base64Img);
+                renderizarFoto(tipo, base64Img);
+                actualizarSlider();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function renderizarFoto(tipo, src) {
+            const preview = document.getElementById(`img-${tipo}-preview`);
+            const text = document.getElementById(`ph-${tipo}-text`);
+            const slot = document.getElementById(`slot-${tipo}`);
+
+            preview.src = src;
+            preview.style.display = 'block';
+            text.style.display = 'none';
+            slot.classList.add('active');
+        }
+
+        function cargarFotosGuardadas() {
+            const b64Before = localStorage.getItem('enso_img_before');
+            const b64After = localStorage.getItem('enso_img_after');
+
+            if (b64Before) renderizarFoto('before', b64Before);
+            if (b64After) renderizarFoto('after', b64After);
+
+            actualizarSlider();
+        }
+
+        function actualizarSlider() {
+            const b64Before = localStorage.getItem('enso_img_before');
+            const b64After = localStorage.getItem('enso_img_after');
+
+            if (b64Before && b64After) {
+                document.getElementById('slider-img-before').src = b64Before;
+                document.getElementById('slider-img-after').src = b64After;
+                document.getElementById('slider-box').style.display = 'block';
+                document.getElementById('val-lum').innerText = "+34%";
+                document.getElementById('val-hyd').innerText = "Optimo";
+            }
+        }
+
+        function moverSlider(val) {
+            document.getElementById('slider-img-after-wrapper').style.width = val + "%";
         }
 
         function openTab(tabName) {
