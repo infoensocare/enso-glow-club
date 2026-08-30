@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ensō | Glow Club Private Hub</title>
+    <style>
+        :root {
+            --enso-green: #2C3E35;
+            --enso-light-green: #E8EBE4;
+            --enso-bg: #FAF9F6;
+            --enso-card: #FFFFFF;
+            --enso-text: #2B2B2B;
+            --enso-gold: #C5A059;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--enso-bg);
+            color: var(--enso-text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            width: 100%;
+            background-color: var(--enso-green);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header img {
+            max-height: 100px;
+            width: auto;
+            filter: brightness(0) invert(1);
+            margin-bottom: 8px;
+        }
+
+        .club-badge {
+            background: var(--enso-gold);
+            color: var(--enso-green);
+            font-size: 10px;
+            font-weight: bold;
+            padding: 3px 10px;
+            border-radius: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 92%;
+            margin: 25px auto;
+            box-sizing: border-box;
+        }
+
+        .user-welcome {
+            background: var(--enso-card);
+            border: 1px solid var(--enso-light-green);
+            border-radius: 12px;
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+        }
+
+        .user-welcome h3 {
+            margin: 0 0 5px 0;
+            color: var(--enso-green);
+            font-weight: 400;
+            font-size: 20px;
+        }
+
+        .user-welcome p {
+            margin: 0;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .membership-status {
+            text-align: right;
+        }
+
+        .status-pill {
+            display: inline-block;
+            background: rgba(197, 160, 89, 0.15);
+            color: var(--enso-gold);
+            border: 1px solid var(--enso-gold);
+            font-size: 11px;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-weight: bold;
+        }
+
+        .tab-menu {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .tab-btn {
+            background: var(--enso-card);
+            border: 1px solid var(--enso-light-green);
+            color: var(--enso-text);
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover, .tab-btn.active {
+            background: var(--enso-green);
+            color: white;
+            border-color: var(--enso-green);
+        }
+
+        .tab-content {
+            display: none;
+            background: var(--enso-card);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid rgba(0,0,0,0.03);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ESTILOS PRO DE LAS HERRAMIENTAS */
+        .vip-card {
+            background: var(--enso-bg);
+            border: 1px solid var(--enso-light-green);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .vip-tag {
+            background: var(--enso-gold);
+            color: white;
+            font-size: 9px;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-pro {
+            background: var(--enso-green);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* BARRAS DE HISTORIAL DE DIAGNÓSTICO */
+        .chart-container {
+            display: flex;
+            align-items: flex-end;
+            gap: 20px;
+            height: 150px;
+            margin: 25px 0 10px 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--enso-light-green);
+        }
+
+        .chart-bar-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            justify-content: flex-end;
+        }
+
+        .chart-bar {
+            width: 100%;
+            max-width: 40px;
+            background: var(--enso-green);
+            border-radius: 4px 4px 0 0;
+            transition: height 0.5s ease;
+        }
+
+        .chart-label {
+            font-size: 10px;
+            color: #777;
+            margin-top: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="logo.png" alt="ensō logo" onerror="this.style.display='none'; document.getElementById('alt-title').style.display='block';">
+        <h1 id="alt-title" style="display:none; margin:0; font-size:28px; letter-spacing:4px; font-weight:300;">ensō</h1>
+        <span class="club-badge">GLOW CLUB • PORTAL PRIVADO</span>
+    </header>
+
+    <div class="container">
+        <div class="user-welcome">
+            <div>
+                <h3>Bienvenida de nuevo, Sofía</h3>
+                <p>Nivel de Membresía: <b>Socio Platinum</b> (Piel en fase de Regeneración)</p>
+            </div>
+            <div class="membership-status">
+                <span class="status-pill">MIEMBRO VIP ACTIVO</span>
+                <div style="font-size: 10px; color: #888; margin-top: 4px;">Créditos en Productos: $50.000 COP</div>
+            </div>
+        </div>
+
+        <div class="tab-menu">
+            <button class="tab-btn active" onclick="openTab('journal')">📖 SKIN JOURNAL PRO</button>
+            <button class="tab-btn" onclick="openTab('exposoma')">🛡️ EXPOSOMA PRO & ALERTAS</button>
+            <button class="tab-btn" onclick="openTab('spa')">🧘 RITUAL SPA EXTENDIDO</button>
+            <button class="tab-btn" onclick="openTab('equilibrio')">📈 HISTÓRICO MENTE-PIEL</button>
+        </div>
+
+        <!-- 1. SKIN JOURNAL CON IA & COMPARATIVA -->
+        <div id="tab-journal" class="tab-content active">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
+                <h3 style="color: var(--enso-green); margin:0;">Registro Fotográfico & Análisis de Textura</h3>
+                <span class="vip-tag">Exclusivo Club</span>
+            </div>
+            <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Sube tu foto semanal. Nuestro algoritmo privado analizará la simetría de luminosidad y la atenuación de líneas de tensión.</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px;">
+                <div class="vip-card" style="text-align: center;">
+                    <h4 style="margin:0 0 5px 0; color:var(--enso-green);">Foto Inicial (Semana 1)</h4>
+                    <p style="font-size:11px; color:#888;">Índice de Opacidad: 68%</p>
+                    <div style="width:100%; height:130px; background:#e0e0e0; border-radius:6px; margin:10px 0; display:flex; align-items:center; justify-content:center; font-size:12px; color:#666;">[ Imagen Base ]</div>
+                </div>
+
+                <div class="vip-card" style="text-align: center;">
+                    <h4 style="margin:0 0 5px 0; color:var(--enso-green);">Foto Actual (Semana 4)</h4>
+                    <p style="font-size:11px; color:var(--enso-gold); font-weight:bold;">Luminosidad: +34%</p>
+                    <div style="width:100%; height:130px; background:#d4dfd9; border-radius:6px; margin:10px 0; display:flex; align-items:center; justify-content:center; font-size:12px; color:var(--enso-green); font-weight:bold;">[ Avance Detectado ]</div>
+                </div>
+
+                <div class="vip-card" style="text-align: center; border: 2px dashed var(--enso-gold);">
+                    <h4 style="margin:0 0 5px 0; color:var(--enso-gold);">Nuevo Registro</h4>
+                    <p style="font-size:11px; color:#888;">Toma la foto de hoy con luz natural</p>
+                    <button class="btn-pro" style="margin-top:25px; width:100%;">TOMAR FOTO AHORA</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. EXPOSOMA PRO CON ALERTAS AUTOMÁTICAS POR WHATSAPP -->
+        <div id="tab-exposoma" class="tab-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
+                <h3 style="color: var(--enso-green); margin:0;">Alertas Climáticas Automatizadas</h3>
+                <span class="vip-tag">Exclusivo Club</span>
+            </div>
+            <p style="font-size: 13px; color: #666;">Como socio VIP, no necesitas consultar la web diariamente. Te enviamos el diagnóstico de exposoma a tu celular antes de salir de casa.</p>
+
+            <div class="vip-card">
+                <h4 style="margin:0 0 10px 0; color:var(--enso-green);"> Configuración de Notificación Diaria</h4>
+                <div style="display:flex; gap:10px; align-items:center; margin-bottom:15px;">
+                    <label style="font-size:12px;">Enviar reporte diario a mi WhatsApp a las:</label>
+                    <input type="time" value="07:00" style="padding:5px 10px; border:1px solid var(--enso-light-green); border-radius:4px;">
+                </div>
+                <div style="font-size:11px; color:#777; background:white; padding:10px; border-radius:6px;">
+                    <b>Último mensaje enviado hoy (7:00 AM):</b> "Hola Sofía 🌿. Hoy en Medellín el Índice UV está en 8.2 (Alto) y la humedad cayó al 42%. Sugerimos aplicar 2 gotas extra de Fresh Water antes de tu serum antioxidante."
+                </div>
+                <button class="btn-pro" style="margin-top:15px;" onclick="alert('Preferencia de Alertas WhatsApp Guardada')">GUARDAR PREFERENCIAS</button>
+            </div>
+        </div>
+
+        <!-- 3. SPA GUIADO EXTENDIDO PRO -->
+        <div id="tab-spa" class="tab-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
+                <h3 style="color: var(--enso-green); margin:0;">Rituales Guiados de Experiencia Completa</h3>
+                <span class="vip-tag">Exclusivo Club</span>
+            </div>
+            <p style="font-size: 13px; color: #666;">Accede a protocolos de masaje facial guiados de 7 a 10 minutos con locución profesional e integración de accesorios (Gua Sha o Rodillo de Cuarzo).</p>
+
+            <div class="vip-card">
+                <h4 style="margin:0 0 5px 0; color:var(--enso-green);">Ritual Gua Sha & Drenaje Linfático (8 min)</h4>
+                <p style="font-size:12px; color:#666;">Diseñado para esculpir el óvalo facial y liberar tensión acumulada en el cuello y la mandíbula.</p>
+                <button class="btn-pro" onclick="alert('Iniciando sesión guiada de 8 minutos con audio binaural Alfa...')">INICIAR SESIÓN PRO (8 MIN)</button>
+            </div>
+
+            <div class="vip-card">
+                <h4 style="margin:0 0 5px 0; color:var(--enso-green);">Ritual Anti-Estrés Nocturno & Mente Sana (10 min)</h4>
+                <p style="font-size:12px; color:#666;">Combina digitopuntura facial con técnicas de respiración 4-7-8 para conciliar el sueño mientras actúan los activos.</p>
+                <button class="btn-pro" onclick="alert('Iniciando sesión nocturna con ondas Delta...')">INICIAR SESIÓN NOCTURNA (10 MIN)</button>
+            </div>
+        </div>
+
+        <!-- 4. HISTÓRICO DE DIAGNÓSTICO MENTE-PIEL -->
+        <div id="tab-equilibrio" class="tab-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
+                <h3 style="color: var(--enso-green); margin:0;">Evolución del Índice de Estrés Cutáneo</h3>
+                <span class="vip-tag">Exclusivo Club</span>
+            </div>
+            <p style="font-size: 13px; color: #666;">Gráfica histórica de la reducción de cortisol e irritación neurogénica reflejada en tus cuestionarios semanales:</p>
+
+            <!-- GRÁFICA DE BARRAS HISTÓRICA -->
+            <div class="chart-container">
+                <div class="chart-bar-group">
+                    <div class="chart-bar" style="height: 85%; background: #B84A39;"></div>
+                    <div class="chart-label">Mes 1<br><b>85 pts (Alto)</b></div>
+                </div>
+                <div class="chart-bar-group">
+                    <div class="chart-bar" style="height: 60%; background: #D99B26;"></div>
+                    <div class="chart-label">Mes 2<br><b>60 pts (Medio)</b></div>
+                </div>
+                <div class="chart-bar-group">
+                    <div class="chart-bar" style="height: 32%; background: var(--enso-green);"></div>
+                    <div class="chart-label">Mes 3 (Actual)<br><b>32 pts (Bajo)</b></div>
+                </div>
+            </div>
+
+            <div style="background:var(--enso-bg); padding:15px; border-radius:8px; margin-top:20px; font-size:12px; color:var(--enso-green);">
+                <b>Diagnóstico de Tu Progreso:</b> En 90 días has reducido un <b>62% el nivel de inflamación neurocutánea</b>. Tu barrera biológica se encuentra estable y responde de forma óptima a la absorción de los serums.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openTab(tabName) {
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(c => c.classList.remove('active'));
+
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(b => b.classList.remove('active'));
+
+            document.getElementById('tab-' + tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+    </script>
+</body>
+</html>
