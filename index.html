@@ -59,7 +59,7 @@
             text-transform: uppercase;
         }
 
-        /* MODAL DE BIENVENIDA / ACTIVACIÓN */
+        /* MODAL DE BIENVENIDA CON LOGO */
         .auth-overlay {
             position: fixed;
             top: 0;
@@ -83,6 +83,15 @@
             text-align: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             border: 1px solid var(--enso-gold);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .auth-card img.modal-logo {
+            max-height: 75px;
+            width: auto;
+            margin-bottom: 12px;
         }
 
         .auth-card h2 {
@@ -288,9 +297,12 @@
 </head>
 <body>
 
-    <!-- SCREEN DE ACTIVACIÓN PARA CLIENTES CON CÓDIGO -->
+    <!-- SCREEN DE ACTIVACIÓN CON LOGO INTEGRADO -->
     <div id="auth-modal" class="auth-overlay">
         <div class="auth-card">
+            <img src="logo.png" alt="ensō logo" class="modal-logo" onerror="this.style.display='none'; document.getElementById('modal-alt-title').style.display='block';">
+            <h1 id="modal-alt-title" style="display:none; margin:0 0 10px 0; font-size:26px; letter-spacing:4px; font-weight:300; color:var(--enso-green);">ensō</h1>
+            
             <span class="club-badge">ACCESO EXCLUSIVO</span>
             <h2>ensō Glow Club</h2>
             <p>Ingresa tus datos y el código de invitación incluido en tu Kit de Neurocosmética para activar 3 meses de acceso VIP.</p>
@@ -430,7 +442,6 @@
     </div>
 
     <script>
-        // COMPROBAR SI YA ACTIVÓ SU SESIÓN EN ESTE NAVEGADOR
         window.onload = function() {
             const savedName = localStorage.getItem('enso_vip_name');
             if (savedName) {
@@ -449,12 +460,10 @@
                 return;
             }
 
-            // Guardar sesión en el dispositivo
             localStorage.setItem('enso_vip_name', name);
             localStorage.setItem('enso_vip_email', email);
 
             document.getElementById('welcome-title').innerText = "Bienvenida, " + name;
-            document.getElementById('auth-modal').style.fadeOut = "fast";
             document.getElementById('auth-modal').style.display = 'none';
 
             alert('¡Membresía VIP Activada con Éxito! Disfruta de tus 90 días de acceso exclusivo al Glow Club.');
