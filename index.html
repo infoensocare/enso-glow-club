@@ -12,6 +12,9 @@
             --enso-card: #FFFFFF;
             --enso-text: #2B2B2B;
             --enso-gold: #C5A059;
+            --enso-alert-low: #5B8C5A;
+            --enso-alert-mid: #D99B26;
+            --enso-alert-high: #B84A39;
         }
 
         body {
@@ -54,6 +57,80 @@
             border-radius: 12px;
             letter-spacing: 2px;
             text-transform: uppercase;
+        }
+
+        /* MODAL DE BIENVENIDA / ACTIVACIÓN */
+        .auth-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(44, 62, 53, 0.95);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-card {
+            background: var(--enso-card);
+            padding: 35px 30px;
+            border-radius: 16px;
+            max-width: 420px;
+            width: 88%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border: 1px solid var(--enso-gold);
+        }
+
+        .auth-card h2 {
+            color: var(--enso-green);
+            margin: 10px 0 5px 0;
+            font-weight: 300;
+            font-size: 24px;
+        }
+
+        .auth-card p {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+            margin-bottom: 25px;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid var(--enso-light-green);
+            border-radius: 6px;
+            font-size: 13px;
+            box-sizing: border-box;
+            background: var(--enso-bg);
+            outline: none;
+        }
+
+        .auth-input:focus {
+            border-color: var(--enso-green);
+        }
+
+        .btn-activate {
+            width: 100%;
+            background: var(--enso-green);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .btn-activate:hover {
+            background: #23322a;
         }
 
         .container {
@@ -144,7 +221,6 @@
             display: block;
         }
 
-        /* ESTILOS PRO DE LAS HERRAMIENTAS */
         .vip-card {
             background: var(--enso-bg);
             border: 1px solid var(--enso-light-green);
@@ -175,7 +251,6 @@
             cursor: pointer;
         }
 
-        /* BARRAS DE HISTORIAL DE DIAGNÓSTICO */
         .chart-container {
             display: flex;
             align-items: flex-end;
@@ -213,6 +288,22 @@
 </head>
 <body>
 
+    <!-- SCREEN DE ACTIVACIÓN PARA CLIENTES CON CÓDIGO -->
+    <div id="auth-modal" class="auth-overlay">
+        <div class="auth-card">
+            <span class="club-badge">ACCESO EXCLUSIVO</span>
+            <h2>ensō Glow Club</h2>
+            <p>Ingresa tus datos y el código de invitación incluido en tu Kit de Neurocosmética para activar 3 meses de acceso VIP.</p>
+            
+            <input type="text" id="user-name" class="auth-input" placeholder="Tu Nombre Completo">
+            <input type="email" id="user-email" class="auth-input" placeholder="Tu Correo Electrónico">
+            <input type="text" id="vip-code" class="auth-input" placeholder="Código de Invitación o N° de Pedido" style="text-transform: uppercase;">
+            
+            <button class="btn-activate" onclick="validarAcceso()">ACTIVAR MI MEMBRESÍA VIP</button>
+            <div style="margin-top: 15px; font-size: 11px; color: #aaa;">¿No tienes un código? Adquiere tu kit en ensocare.com.co</div>
+        </div>
+    </div>
+
     <header>
         <img src="logo.png" alt="ensō logo" onerror="this.style.display='none'; document.getElementById('alt-title').style.display='block';">
         <h1 id="alt-title" style="display:none; margin:0; font-size:28px; letter-spacing:4px; font-weight:300;">ensō</h1>
@@ -222,12 +313,12 @@
     <div class="container">
         <div class="user-welcome">
             <div>
-                <h3>Bienvenida de nuevo, Sofía</h3>
+                <h3 id="welcome-title">Bienvenida al Club</h3>
                 <p>Nivel de Membresía: <b>Socio Platinum</b> (Piel en fase de Regeneración)</p>
             </div>
             <div class="membership-status">
                 <span class="status-pill">MIEMBRO VIP ACTIVO</span>
-                <div style="font-size: 10px; color: #888; margin-top: 4px;">Créditos en Productos: $50.000 COP</div>
+                <div style="font-size: 10px; color: #888; margin-top: 4px;">Acceso Desbloqueado: 90 Días</div>
             </div>
         </div>
 
@@ -238,13 +329,13 @@
             <button class="tab-btn" onclick="openTab('equilibrio')">📈 HISTÓRICO MENTE-PIEL</button>
         </div>
 
-        <!-- 1. SKIN JOURNAL CON IA & COMPARATIVA -->
+        <!-- PESTAÑA 1 -->
         <div id="tab-journal" class="tab-content active">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
                 <h3 style="color: var(--enso-green); margin:0;">Registro Fotográfico & Análisis de Textura</h3>
                 <span class="vip-tag">Exclusivo Club</span>
             </div>
-            <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Sube tu foto semanal. Nuestro algoritmo privado analizará la simetría de luminosidad y la atenuación de líneas de tensión.</p>
+            <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Sube tu foto semanal. Nuestro algoritmo analizará la simetría de luminosidad y la atenuación de líneas de tensión.</p>
             
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px;">
                 <div class="vip-card" style="text-align: center;">
@@ -267,7 +358,7 @@
             </div>
         </div>
 
-        <!-- 2. EXPOSOMA PRO CON ALERTAS AUTOMÁTICAS POR WHATSAPP -->
+        <!-- PESTAÑA 2 -->
         <div id="tab-exposoma" class="tab-content">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
                 <h3 style="color: var(--enso-green); margin:0;">Alertas Climáticas Automatizadas</h3>
@@ -282,19 +373,19 @@
                     <input type="time" value="07:00" style="padding:5px 10px; border:1px solid var(--enso-light-green); border-radius:4px;">
                 </div>
                 <div style="font-size:11px; color:#777; background:white; padding:10px; border-radius:6px;">
-                    <b>Último mensaje enviado hoy (7:00 AM):</b> "Hola Sofía 🌿. Hoy en Medellín el Índice UV está en 8.2 (Alto) y la humedad cayó al 42%. Sugerimos aplicar 2 gotas extra de Fresh Water antes de tu serum antioxidante."
+                    <b>Último mensaje enviado hoy (7:00 AM):</b> "Hola 🌿. Hoy en tu zona el Índice UV está en 8.2 (Alto) y la humedad cayó al 42%. Sugerimos aplicar 2 gotas extra de Fresh Water antes de tu serum antioxidante."
                 </div>
                 <button class="btn-pro" style="margin-top:15px;" onclick="alert('Preferencia de Alertas WhatsApp Guardada')">GUARDAR PREFERENCIAS</button>
             </div>
         </div>
 
-        <!-- 3. SPA GUIADO EXTENDIDO PRO -->
+        <!-- PESTAÑA 3 -->
         <div id="tab-spa" class="tab-content">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
                 <h3 style="color: var(--enso-green); margin:0;">Rituales Guiados de Experiencia Completa</h3>
                 <span class="vip-tag">Exclusivo Club</span>
             </div>
-            <p style="font-size: 13px; color: #666;">Accede a protocolos de masaje facial guiados de 7 a 10 minutos con locución profesional e integración de accesorios (Gua Sha o Rodillo de Cuarzo).</p>
+            <p style="font-size: 13px; color: #666;">Accede a protocolos de masaje facial guiados de 7 a 10 minutos con locución profesional e integración de accesorios.</p>
 
             <div class="vip-card">
                 <h4 style="margin:0 0 5px 0; color:var(--enso-green);">Ritual Gua Sha & Drenaje Linfático (8 min)</h4>
@@ -309,7 +400,7 @@
             </div>
         </div>
 
-        <!-- 4. HISTÓRICO DE DIAGNÓSTICO MENTE-PIEL -->
+        <!-- PESTAÑA 4 -->
         <div id="tab-equilibrio" class="tab-content">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
                 <h3 style="color: var(--enso-green); margin:0;">Evolución del Índice de Estrés Cutáneo</h3>
@@ -317,7 +408,6 @@
             </div>
             <p style="font-size: 13px; color: #666;">Gráfica histórica de la reducción de cortisol e irritación neurogénica reflejada en tus cuestionarios semanales:</p>
 
-            <!-- GRÁFICA DE BARRAS HISTÓRICA -->
             <div class="chart-container">
                 <div class="chart-bar-group">
                     <div class="chart-bar" style="height: 85%; background: #B84A39;"></div>
@@ -334,12 +424,42 @@
             </div>
 
             <div style="background:var(--enso-bg); padding:15px; border-radius:8px; margin-top:20px; font-size:12px; color:var(--enso-green);">
-                <b>Diagnóstico de Tu Progreso:</b> En 90 días has reducido un <b>62% el nivel de inflamación neurocutánea</b>. Tu barrera biológica se encuentra estable y responde de forma óptima a la absorción de los serums.
+                <b>Diagnóstico de Tu Progreso:</b> En 90 días has reducido un <b>62% el nivel de inflamación neurocutánea</b>. Tu barrera biológica se encuentra estable.
             </div>
         </div>
     </div>
 
     <script>
+        // COMPROBAR SI YA ACTIVÓ SU SESIÓN EN ESTE NAVEGADOR
+        window.onload = function() {
+            const savedName = localStorage.getItem('enso_vip_name');
+            if (savedName) {
+                document.getElementById('auth-modal').style.display = 'none';
+                document.getElementById('welcome-title').innerText = "Bienvenida de nuevo, " + savedName;
+            }
+        };
+
+        function validarAcceso() {
+            const name = document.getElementById('user-name').value.trim();
+            const email = document.getElementById('user-email').value.trim();
+            const code = document.getElementById('vip-code').value.trim().toUpperCase();
+
+            if (!name || !email || !code) {
+                alert('Por favor completa todos los campos para activar tu acceso.');
+                return;
+            }
+
+            // Guardar sesión en el dispositivo
+            localStorage.setItem('enso_vip_name', name);
+            localStorage.setItem('enso_vip_email', email);
+
+            document.getElementById('welcome-title').innerText = "Bienvenida, " + name;
+            document.getElementById('auth-modal').style.fadeOut = "fast";
+            document.getElementById('auth-modal').style.display = 'none';
+
+            alert('¡Membresía VIP Activada con Éxito! Disfruta de tus 90 días de acceso exclusivo al Glow Club.');
+        }
+
         function openTab(tabName) {
             const contents = document.querySelectorAll('.tab-content');
             contents.forEach(c => c.classList.remove('active'));
