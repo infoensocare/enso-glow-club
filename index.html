@@ -273,6 +273,7 @@
             object-fit: cover;
             border-radius: 8px;
             display: none;
+            margin-bottom: 10px;
         }
 
         .file-input {
@@ -288,7 +289,24 @@
             font-weight: bold;
             cursor: pointer;
             display: inline-block;
-            margin-top: 10px;
+            margin-top: 5px;
+            transition: background 0.2s ease;
+        }
+
+        .upload-label:hover {
+            background: #1e2c25;
+        }
+
+        .clear-btn {
+            background: transparent;
+            color: var(--enso-alert-high);
+            border: 1px solid var(--enso-alert-high);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 10px;
+            cursor: pointer;
+            margin-left: 5px;
+            display: none;
         }
 
         .slider-container {
@@ -340,6 +358,14 @@
             letter-spacing: 1px;
             z-index: 4;
         }
+
+        .loader-spinner {
+            display: none;
+            font-size: 11px;
+            color: var(--enso-gold);
+            margin-top: 6px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -386,33 +412,45 @@
             <button class="tab-btn" onclick="openTab('equilibrio')">📈 HISTÓRICO MENTE-PIEL</button>
         </div>
 
+        <!-- GLOW JOURNAL -->
         <div id="tab-journal" class="tab-content active">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
                 <h3 style="color: var(--enso-green); margin:0;">Análisis Algorítmico de Píxeles & Evolución</h3>
                 <span class="vip-tag">Motor DIP Local</span>
             </div>
-            <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Sube tu foto inicial y la de hoy. El algoritmo procesará la matriz RGB para calcular el incremento real de luminancia y la atenuación cromática de rojeces.</p>
+            <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Sube o actualiza tus fotos libremente. El algoritmo redimensionará y procesará la matriz cromática para calcular el progreso sin saturar tu dispositivo.</p>
             
             <div class="journal-upload-box">
+                <!-- SLOT FOTO ANTES -->
                 <div class="photo-slot" id="slot-before">
                     <h4 style="margin:0 0 8px 0; color:var(--enso-green);">Semana 1 (Antes)</h4>
                     <img id="img-before-preview" class="photo-preview">
-                    <div id="ph-before-text" style="font-size:11px; color:#888; margin: 40px 0;">Sin imagen guardada</div>
-                    <label class="upload-label" for="file-before">SELECCIONAR FOTO</label>
-                    <input type="file" id="file-before" class="file-input" accept="image/*" onchange="guardarFoto('before', event)">
+                    <div id="ph-before-text" style="font-size:11px; color:#888; margin: 30px 0;">Sin imagen guardada</div>
+                    <div id="loader-before" class="loader-spinner">Optimizando foto...</div>
+                    <div style="margin-top:5px;">
+                        <label id="lbl-before" class="upload-label" for="file-before">SELECCIONAR FOTO</label>
+                        <button id="btn-clear-before" class="clear-btn" onclick="eliminarFoto('before')">ELIMINAR</button>
+                        <input type="file" id="file-before" class="file-input" accept="image/*" onchange="procesarYGuardarFoto('before', event)">
+                    </div>
                 </div>
 
+                <!-- SLOT FOTO DESPUÉS -->
                 <div class="photo-slot" id="slot-after">
                     <h4 style="margin:0 0 8px 0; color:var(--enso-green);">Semana Actual (Hoy)</h4>
                     <img id="img-after-preview" class="photo-preview">
-                    <div id="ph-after-text" style="font-size:11px; color:#888; margin: 40px 0;">Sin imagen guardada</div>
-                    <label class="upload-label" for="file-after">SELECCIONAR FOTO</label>
-                    <input type="file" id="file-after" class="file-input" accept="image/*" onchange="guardarFoto('after', event)">
+                    <div id="ph-after-text" style="font-size:11px; color:#888; margin: 30px 0;">Sin imagen guardada</div>
+                    <div id="loader-after" class="loader-spinner">Optimizando foto...</div>
+                    <div style="margin-top:5px;">
+                        <label id="lbl-after" class="upload-label" for="file-after">SELECCIONAR FOTO</label>
+                        <button id="btn-clear-after" class="clear-btn" onclick="eliminarFoto('after')">ELIMINAR</button>
+                        <input type="file" id="file-after" class="file-input" accept="image/*" onchange="procesarYGuardarFoto('after', event)">
+                    </div>
                 </div>
             </div>
 
             <canvas id="analysis-canvas" style="display:none;"></canvas>
 
+            <!-- SLIDER COMPARATIVO -->
             <div id="slider-box" class="slider-container">
                 <span class="slider-badge" style="left:12px;">SEMANA ACTUAL</span>
                 <span class="slider-badge" style="right:12px;">SEMANA 1</span>
@@ -423,6 +461,7 @@
                 <input type="range" min="0" max="100" value="50" class="slider-range" oninput="moverSlider(this.value)">
             </div>
 
+            <!-- RESULTADOS -->
             <div class="vip-card" style="margin-top:20px;">
                 <h4 style="margin:0 0 10px 0; color:var(--enso-green);">Resultados del Procesamiento Digital de Píxeles</h4>
                 <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:15px; text-align:center;">
@@ -486,16 +525,56 @@
             document.getElementById('auth-modal').style.display = 'none';
         }
 
-        function guardarFoto(tipo, event) {
+        // COMPRESIÓN Y OPTIMIZACIÓN EN TIEMPO REAL PARA EVITAR CACHÉ Y ERRORES DE CUOTA
+        function procesarYGuardarFoto(tipo, event) {
             const file = event.target.files[0];
             if (!file) return;
 
+            document.getElementById(`loader-${tipo}`).style.display = 'block';
+
             const reader = new FileReader();
             reader.onload = function(e) {
-                const base64Img = e.target.result;
-                localStorage.setItem('enso_img_' + tipo, base64Img);
-                renderizarFoto(tipo, base64Img);
-                ejecutarAlgoritmoReal();
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 800;
+                    const MAX_HEIGHT = 800;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
+                        }
+                    } else {
+                        if (height > MAX_HEIGHT) {
+                            width *= MAX_HEIGHT / height;
+                            height = MAX_HEIGHT;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // Compresión ligera a JPEG al 75%
+                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.75);
+
+                    try {
+                        localStorage.setItem('enso_img_' + tipo, compressedBase64);
+                        renderizarFoto(tipo, compressedBase64);
+                        ejecutarAlgoritmoReal();
+                    } catch (err) {
+                        alert('Error al guardar la imagen. Intenta seleccionar otra foto.');
+                    } finally {
+                        document.getElementById(`loader-${tipo}`).style.display = 'none';
+                        // Limpiar input para permitir seleccionar la misma foto o cambiar libremente
+                        event.target.value = '';
+                    }
+                };
+                img.src = e.target.result;
             };
             reader.readAsDataURL(file);
         }
@@ -504,11 +583,39 @@
             const preview = document.getElementById(`img-${tipo}-preview`);
             const text = document.getElementById(`ph-${tipo}-text`);
             const slot = document.getElementById(`slot-${tipo}`);
+            const lbl = document.getElementById(`lbl-${tipo}`);
+            const btnClear = document.getElementById(`btn-clear-${tipo}`);
 
             preview.src = src;
             preview.style.display = 'block';
             text.style.display = 'none';
             slot.classList.add('active');
+            lbl.innerText = "CAMBIAR FOTO";
+            btnClear.style.display = 'inline-block';
+        }
+
+        function eliminarFoto(tipo) {
+            localStorage.removeItem('enso_img_' + tipo);
+
+            const preview = document.getElementById(`img-${tipo}-preview`);
+            const text = document.getElementById(`ph-${tipo}-text`);
+            const slot = document.getElementById(`slot-${tipo}`);
+            const lbl = document.getElementById(`lbl-${tipo}`);
+            const btnClear = document.getElementById(`btn-clear-${tipo}`);
+
+            preview.src = '';
+            preview.style.display = 'none';
+            text.style.display = 'block';
+            slot.classList.remove('active');
+            lbl.innerText = "SELECCIONAR FOTO";
+            btnClear.style.display = 'none';
+
+            // Ocultar slider y reiniciar métricas si falta alguna foto
+            document.getElementById('slider-box').style.display = 'none';
+            document.getElementById('val-lum').innerText = "--";
+            document.getElementById('val-red').innerText = "--";
+            document.getElementById('val-uni').innerText = "--";
+            document.getElementById('analysis-summary').style.display = 'none';
         }
 
         function cargarFotosGuardadas() {
@@ -523,7 +630,6 @@
             }
         }
 
-        // MOTOR COMPUTACIONAL DE ANÁLISIS DE PÍXELES EN TIEMPO REAL
         async function ejecutarAlgoritmoReal() {
             const b64Before = localStorage.getItem('enso_img_before');
             const b64After = localStorage.getItem('enso_img_after');
@@ -534,20 +640,13 @@
             document.getElementById('slider-img-after').src = b64After;
             document.getElementById('slider-box').style.display = 'block';
 
-            // Analizar ambas imágenes mediante Canvas API
             const metricsBefore = await analizarMatrizImagen(b64Before);
             const metricsAfter = await analizarMatrizImagen(b64After);
 
-            // 1. Cálculo del cambio en Luminancia
             const diffLum = Math.round(((metricsAfter.luminance - metricsBefore.luminance) / metricsBefore.luminance) * 100);
-            
-            // 2. Cálculo del cambio en Índice de Eritema (Rojeces)
             const diffErythema = Math.round(((metricsAfter.erythema - metricsBefore.erythema) / metricsBefore.erythema) * 100);
-
-            // 3. Uniformidad Tonal
             const statusUniformity = metricsAfter.stdDev < metricsBefore.stdDev ? "Mejorada (+18%)" : "Estable";
 
-            // Renderizado en Pantalla
             document.getElementById('val-lum').innerText = (diffLum >= 0 ? "+" : "") + diffLum + "%";
             document.getElementById('val-red').innerText = (diffErythema <= 0 ? "" : "+") + diffErythema + "%";
             document.getElementById('val-uni').innerText = statusUniformity;
@@ -560,7 +659,7 @@
             } else if (diffLum > 0) {
                 summaryBox.innerHTML = "<b>Diagnóstico Algorítmico:</b> La matriz cromática refleja un aumento en la dispersión de luz superficial. La barrera cutánea presenta mayor nivel de reflectancia natural.";
             } else {
-                summaryBox.innerHTML = "<b>Diagnóstico Algorítmico:</b> La variación lumínica es moderada. Asegúrate de capturar ambas fotografías bajo la misma fuente de iluminación para optimizar la resolución matricial.";
+                summaryBox.innerHTML = "<b>Diagnóstico Algorítmico:</b> Variación lumínica procesada. Asegúrate de capturar las fotografías bajo condiciones de luz similares para maximizar la resolución del análisis.";
             }
         }
 
@@ -571,7 +670,6 @@
                     const canvas = document.getElementById('analysis-canvas');
                     const ctx = canvas.getContext('2d');
                     
-                    // Escalar a 150x150 para optimizar velocidad de procesamiento
                     canvas.width = 150;
                     canvas.height = 150;
                     ctx.drawImage(img, 0, 0, 150, 150);
@@ -588,20 +686,16 @@
                         const g = data[i + 1];
                         const b = data[i + 2];
 
-                        // Fórmula Estándar ITU-R BT.601 para Luminancia
                         const lum = (0.299 * r) + (0.587 * g) + (0.114 * b);
                         totalLuminance += lum;
                         luminanceValues.push(lum);
 
-                        // Índice de Eritema (R/G)
                         const ery = g > 0 ? (r / g) : 1;
                         totalErythema += ery;
                     }
 
                     const avgLum = totalLuminance / (data.length / 4);
                     const avgEry = totalErythema / (data.length / 4);
-
-                    // Desviación estándar (Medición de Uniformidad)
                     const variance = luminanceValues.reduce((sq, val) => sq + Math.pow(val - avgLum, 2), 0) / luminanceValues.length;
                     const stdDev = Math.sqrt(variance);
 
