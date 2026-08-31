@@ -362,79 +362,13 @@
             font-weight: bold;
         }
 
-        /* ESTILOS EXPOSOMA PRO */
-        .expo-search-bar {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .expo-search-bar input {
-            flex-grow: 1;
-            padding: 10px 14px;
-            border: 1px solid var(--enso-light-green);
-            border-radius: 6px;
-            font-size: 13px;
-            outline: none;
-            background: var(--enso-bg);
-        }
-
-        .expo-search-bar button {
-            background: var(--enso-green);
-            color: white;
+        /* IFRAME INTEGRACIÓN CLIMA REAL */
+        .expo-iframe {
+            width: 100%;
+            height: 750px;
             border: none;
-            padding: 10px 16px;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .expo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .expo-card-metric {
-            background: white;
-            border: 1px solid var(--enso-light-green);
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .expo-card-metric .title {
-            font-size: 10px;
-            color: #777;
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-
-        .expo-card-metric .value {
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--enso-green);
-            margin-top: 4px;
-        }
-
-        .ivn-badge-box {
-            background: var(--enso-green);
-            color: white;
-            padding: 20px;
             border-radius: 10px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .whatsapp-preview-card {
-            background: #E5DDD5;
-            border-radius: 10px;
-            padding: 15px;
-            border-left: 5px solid #25D366;
-            margin-top: 15px;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #FAF9F6;
         }
     </style>
 </head>
@@ -548,48 +482,21 @@
             </div>
         </div>
 
-        <!-- PESTAÑA 2: EXPOSOMA PRO 100% FUNCIONAL CON API EN VIVO Y ALERTAS -->
+        <!-- PESTAÑA 2: INTEGRA LA APP NATIVA DE CLIMA.ENSOCARE.COM.CO -->
         <div id="tab-exposoma" class="tab-content">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
-                <h3 style="color: var(--enso-green); margin:0;">Monitor de Exposoma en Vivo & Alertas VIP</h3>
-                <span class="vip-tag">API Open-Meteo Pro</span>
+                <h3 style="color: var(--enso-green); margin:0;">Monitor de Exposoma (Neuro-Escudo)</h3>
+                <span class="vip-tag">Aplicación Oficial</span>
             </div>
-            <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Análisis en tiempo real de los agentes climáticos de tu ubicación y recomendación de dosis diaria.</p>
+            <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Visualiza en tiempo real las variables ambientales y la sugerencia de dosis de la aplicación oficial de ensō.</p>
 
-            <div class="expo-search-bar">
-                <input type="text" id="expo-city-input" placeholder="Ingresa tu ciudad (ej. Medellín, Bogotá, Madrid)...">
-                <button onclick="buscarClimaCiudad()">CONSULTAR</button>
-            </div>
+            <!-- Carga idéntica de la app original clima.ensocare.com.co -->
+            <iframe src="https://clima.ensocare.com.co" class="expo-iframe" title="ensō Exposoma App"></iframe>
 
-            <div class="ivn-badge-box">
-                <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; opacity: 0.8;">ÍNDICE DE VULNERABILIDAD NEUROCUTÁNEA (IVN)</div>
-                <div style="font-size: 42px; font-weight: 300; margin: 8px 0;" id="expo-ivn-val">--</div>
-                <div style="font-size: 13px; font-weight: bold; color: var(--enso-gold);" id="expo-ivn-status">Consultando clima en tiempo real...</div>
-            </div>
-
-            <div class="expo-grid">
-                <div class="expo-card-metric">
-                    <div class="title">☀️ ÍNDICE UV</div>
-                    <div class="value" id="expo-uv">--</div>
-                </div>
-                <div class="expo-card-metric">
-                    <div class="title">💧 HUMEDAD</div>
-                    <div class="value" id="expo-hum">--</div>
-                </div>
-                <div class="expo-card-metric">
-                    <div class="title">🌡️ TEMPERATURA</div>
-                    <div class="value" id="expo-temp">--</div>
-                </div>
-                <div class="expo-card-metric">
-                    <div class="title">💨 VIENTO</div>
-                    <div class="value" id="expo-wind">--</div>
-                </div>
-            </div>
-
-            <!-- SIMULACIÓN DE ALERTA DIARIA POR WHATSAPP -->
+            <!-- MÓDULO EXCLUSIVO CLUB: CONFIGURACIÓN DE ALERTAS POR WHATSAPP -->
             <div class="vip-card" style="margin-top: 25px;">
                 <h4 style="margin:0 0 10px 0; color:var(--enso-green);">📱 Configuración de Alerta Diaria por WhatsApp</h4>
-                <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Configura la hora en que despiertas para recibir el reporte del exposoma y la recomendación de dosis directamente en tu celular.</p>
+                <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Como miembro del Club, configura la hora en que despiertas para recibir el reporte del exposoma y tu recomendación de dosis directo en tu celular.</p>
 
                 <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
                     <div style="flex: 1; min-width: 180px;">
@@ -602,15 +509,7 @@
                     </div>
                 </div>
 
-                <button class="upload-label" style="width: 100%; text-align: center; margin-top: 15px; padding: 12px;" onclick="guardarAlertaWhatsApp()">GUARDAR Y ACTIVAR ALERTAS VIP</button>
-
-                <!-- PREVISUALIZACIÓN DE MENSAJE -->
-                <div class="whatsapp-preview-card">
-                    <div style="font-size: 11px; font-weight: bold; color: #075E54; margin-bottom: 4px;">PREVISUALIZACIÓN DEL MENSAJE DIARIO (WHATSAPP):</div>
-                    <div style="font-size: 12px; color: #303030; line-height: 1.4;" id="whatsapp-text-preview">
-                        Cargando reporte personalizado...
-                    </div>
-                </div>
+                <button class="upload-label" style="width: 100%; text-align: center; margin-top: 15px; padding: 12px;" onclick="guardarAlertaWhatsApp()">ACTIVAR ALERTAS VIP EN MI WHATSAPP</button>
             </div>
         </div>
 
@@ -635,7 +534,6 @@
                 document.getElementById('welcome-title').innerText = "Bienvenida de nuevo, " + savedName;
             }
             cargarFotosGuardadas();
-            iniciarExposomaGPS();
         };
 
         function validarAcceso() {
@@ -834,94 +732,6 @@
 
         function moverSlider(val) {
             document.getElementById('slider-img-after-wrapper').style.width = val + "%";
-        }
-
-        /* MOTOR DE EXPOSOMA PRO */
-        function iniciarExposomaGPS() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    pos => fetchClimaAPI(pos.coords.latitude, pos.coords.longitude, "Tu Ubicación Actual"),
-                    err => fetchClimaAPI(6.2442, -75.5812, "Medellín, Colombia")
-                );
-            } else {
-                fetchClimaAPI(6.2442, -75.5812, "Medellín, Colombia");
-            }
-        }
-
-        async function buscarClimaCiudad() {
-            const city = document.getElementById('expo-city-input').value.trim();
-            if (!city) return;
-
-            try {
-                const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=es&format=json`);
-                const data = await res.json();
-
-                if (data.results && data.results.length > 0) {
-                    const loc = data.results[0];
-                    fetchClimaAPI(loc.latitude, loc.longitude, `${loc.name}, ${loc.country || ''}`);
-                } else {
-                    alert('Ciudad no encontrada.');
-                }
-            } catch (e) {
-                alert('Error al buscar la ciudad.');
-            }
-        }
-
-        async function fetchClimaAPI(lat, lon, nombreLugar) {
-            document.getElementById('expo-city-input').value = nombreLugar;
-
-            try {
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,uv_index&timezone=auto`;
-                const res = await fetch(url);
-                const data = await res.json();
-
-                const c = data.current;
-                const temp = Math.round(c.temperature_2m);
-                const hum = c.relative_humidity_2m;
-                const uv = c.uv_index !== undefined ? c.uv_index : 4;
-                const wind = Math.round(c.wind_speed_10m);
-
-                // CÁLCULO IVN
-                let ivn = 20;
-                if (uv > 6) ivn += 25; else if (uv > 3) ivn += 12;
-                if (hum < 45 || hum > 85) ivn += 20;
-                if (wind > 20) ivn += 15;
-                if (ivn > 99) ivn = 99;
-
-                document.getElementById('expo-uv').innerText = uv;
-                document.getElementById('expo-hum').innerText = hum + "%";
-                document.getElementById('expo-temp').innerText = temp + "°C";
-                document.getElementById('expo-wind').innerText = wind + " km/h";
-                document.getElementById('expo-ivn-val').innerText = ivn + " / 100";
-
-                let statusTxt = "";
-                let recDosis = "";
-
-                if (ivn < 40) {
-                    statusTxt = "ESTRÉS BAJO • PIEL EN EQUILIBRIO";
-                    recDosis = "Aplica tu rutina estándar de 3 pasos (Limpiador + Serum + Hidratante).";
-                } else if (ivn < 70) {
-                    statusTxt = "ESTRÉS MODERADO • ALTERACIÓN LIPÍDICA";
-                    recDosis = "Añade 2 gotas adicionales de Serum Hidratante antes de tu crema para prevenir pérdida de agua.";
-                } else {
-                    statusTxt = "ESTRÉS ALTO • ALERTA DE IRRITACIÓN CUTÁNEA";
-                    recDosis = "Refuerza la barrera con doble capa de emulsión y reaplica tu neuro-escudo cada 4 horas.";
-                }
-
-                document.getElementById('expo-ivn-status').innerText = statusTxt;
-
-                // ACTUALIZAR PREVIEW DE WHATSAPP
-                const userName = localStorage.getItem('enso_vip_name') || "Socio ensō";
-                const previewMsg = `🌿 <b>Hola ${userName}</b>, este es tu reporte del Exposoma para hoy en <b>${nombreLugar}</b>:<br><br>` +
-                    `• <b>Índice IVN:</b> ${ivn}/100 (${statusTxt})<br>` +
-                    `• <b>Índice UV:</b> ${uv} | <b>Humedad:</b> ${hum}%<br><br>` +
-                    `💡 <b>Dosis Recomendada:</b> ${recDosis}`;
-
-                document.getElementById('whatsapp-text-preview').innerHTML = previewMsg;
-
-            } catch (e) {
-                console.error(e);
-            }
         }
 
         function guardarAlertaWhatsApp() {
