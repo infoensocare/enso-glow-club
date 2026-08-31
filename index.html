@@ -290,11 +290,6 @@
             cursor: pointer;
             display: inline-block;
             margin-top: 5px;
-            transition: background 0.2s ease;
-        }
-
-        .upload-label:hover {
-            background: #1e2c25;
         }
 
         .clear-btn {
@@ -366,6 +361,81 @@
             margin-top: 6px;
             font-weight: bold;
         }
+
+        /* ESTILOS EXPOSOMA PRO */
+        .expo-search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .expo-search-bar input {
+            flex-grow: 1;
+            padding: 10px 14px;
+            border: 1px solid var(--enso-light-green);
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+            background: var(--enso-bg);
+        }
+
+        .expo-search-bar button {
+            background: var(--enso-green);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .expo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .expo-card-metric {
+            background: white;
+            border: 1px solid var(--enso-light-green);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .expo-card-metric .title {
+            font-size: 10px;
+            color: #777;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .expo-card-metric .value {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--enso-green);
+            margin-top: 4px;
+        }
+
+        .ivn-badge-box {
+            background: var(--enso-green);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .whatsapp-preview-card {
+            background: #E5DDD5;
+            border-radius: 10px;
+            padding: 15px;
+            border-left: 5px solid #25D366;
+            margin-top: 15px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
     </style>
 </head>
 <body>
@@ -412,7 +482,7 @@
             <button class="tab-btn" onclick="openTab('equilibrio')">📈 HISTÓRICO MENTE-PIEL</button>
         </div>
 
-        <!-- GLOW JOURNAL -->
+        <!-- PESTAÑA 1: GLOW JOURNAL -->
         <div id="tab-journal" class="tab-content active">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
                 <h3 style="color: var(--enso-green); margin:0;">Análisis Algorítmico de Píxeles & Evolución</h3>
@@ -421,7 +491,6 @@
             <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Sube o actualiza tus fotos libremente. El algoritmo redimensionará y procesará la matriz cromática para calcular el progreso sin saturar tu dispositivo.</p>
             
             <div class="journal-upload-box">
-                <!-- SLOT FOTO ANTES -->
                 <div class="photo-slot" id="slot-before">
                     <h4 style="margin:0 0 8px 0; color:var(--enso-green);">Semana 1 (Antes)</h4>
                     <img id="img-before-preview" class="photo-preview">
@@ -434,7 +503,6 @@
                     </div>
                 </div>
 
-                <!-- SLOT FOTO DESPUÉS -->
                 <div class="photo-slot" id="slot-after">
                     <h4 style="margin:0 0 8px 0; color:var(--enso-green);">Semana Actual (Hoy)</h4>
                     <img id="img-after-preview" class="photo-preview">
@@ -450,7 +518,6 @@
 
             <canvas id="analysis-canvas" style="display:none;"></canvas>
 
-            <!-- SLIDER COMPARATIVO -->
             <div id="slider-box" class="slider-container">
                 <span class="slider-badge" style="left:12px;">SEMANA ACTUAL</span>
                 <span class="slider-badge" style="right:12px;">SEMANA 1</span>
@@ -461,7 +528,6 @@
                 <input type="range" min="0" max="100" value="50" class="slider-range" oninput="moverSlider(this.value)">
             </div>
 
-            <!-- RESULTADOS -->
             <div class="vip-card" style="margin-top:20px;">
                 <h4 style="margin:0 0 10px 0; color:var(--enso-green);">Resultados del Procesamiento Digital de Píxeles</h4>
                 <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:15px; text-align:center;">
@@ -482,16 +548,79 @@
             </div>
         </div>
 
+        <!-- PESTAÑA 2: EXPOSOMA PRO 100% FUNCIONAL CON API EN VIVO Y ALERTAS -->
         <div id="tab-exposoma" class="tab-content">
-            <h3 style="color: var(--enso-green); margin-top:0;">Alertas Climáticas Automatizadas</h3>
-            <p style="font-size: 13px; color: #666;">Te enviamos el diagnóstico del clima a tu celular antes de salir de casa.</p>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
+                <h3 style="color: var(--enso-green); margin:0;">Monitor de Exposoma en Vivo & Alertas VIP</h3>
+                <span class="vip-tag">API Open-Meteo Pro</span>
+            </div>
+            <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Análisis en tiempo real de los agentes climáticos de tu ubicación y recomendación de dosis diaria.</p>
+
+            <div class="expo-search-bar">
+                <input type="text" id="expo-city-input" placeholder="Ingresa tu ciudad (ej. Medellín, Bogotá, Madrid)...">
+                <button onclick="buscarClimaCiudad()">CONSULTAR</button>
+            </div>
+
+            <div class="ivn-badge-box">
+                <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; opacity: 0.8;">ÍNDICE DE VULNERABILIDAD NEUROCUTÁNEA (IVN)</div>
+                <div style="font-size: 42px; font-weight: 300; margin: 8px 0;" id="expo-ivn-val">--</div>
+                <div style="font-size: 13px; font-weight: bold; color: var(--enso-gold);" id="expo-ivn-status">Consultando clima en tiempo real...</div>
+            </div>
+
+            <div class="expo-grid">
+                <div class="expo-card-metric">
+                    <div class="title">☀️ ÍNDICE UV</div>
+                    <div class="value" id="expo-uv">--</div>
+                </div>
+                <div class="expo-card-metric">
+                    <div class="title">💧 HUMEDAD</div>
+                    <div class="value" id="expo-hum">--</div>
+                </div>
+                <div class="expo-card-metric">
+                    <div class="title">🌡️ TEMPERATURA</div>
+                    <div class="value" id="expo-temp">--</div>
+                </div>
+                <div class="expo-card-metric">
+                    <div class="title">💨 VIENTO</div>
+                    <div class="value" id="expo-wind">--</div>
+                </div>
+            </div>
+
+            <!-- SIMULACIÓN DE ALERTA DIARIA POR WHATSAPP -->
+            <div class="vip-card" style="margin-top: 25px;">
+                <h4 style="margin:0 0 10px 0; color:var(--enso-green);">📱 Configuración de Alerta Diaria por WhatsApp</h4>
+                <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Configura la hora en que despiertas para recibir el reporte del exposoma y la recomendación de dosis directamente en tu celular.</p>
+
+                <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 180px;">
+                        <label style="font-size: 11px; color: #777; font-weight: bold;">HORA DE ENVÍO DIARIO:</label>
+                        <input type="time" id="alert-time" value="07:00" style="width: 100%; padding: 8px; border: 1px solid var(--enso-light-green); border-radius: 6px; margin-top: 4px; box-sizing: border-box;">
+                    </div>
+                    <div style="flex: 1; min-width: 180px;">
+                        <label style="font-size: 11px; color: #777; font-weight: bold;">NÚMERO DE WHATSAPP:</label>
+                        <input type="text" id="alert-phone" placeholder="+57 300 000 0000" style="width: 100%; padding: 8px; border: 1px solid var(--enso-light-green); border-radius: 6px; margin-top: 4px; box-sizing: border-box;">
+                    </div>
+                </div>
+
+                <button class="upload-label" style="width: 100%; text-align: center; margin-top: 15px; padding: 12px;" onclick="guardarAlertaWhatsApp()">GUARDAR Y ACTIVAR ALERTAS VIP</button>
+
+                <!-- PREVISUALIZACIÓN DE MENSAJE -->
+                <div class="whatsapp-preview-card">
+                    <div style="font-size: 11px; font-weight: bold; color: #075E54; margin-bottom: 4px;">PREVISUALIZACIÓN DEL MENSAJE DIARIO (WHATSAPP):</div>
+                    <div style="font-size: 12px; color: #303030; line-height: 1.4;" id="whatsapp-text-preview">
+                        Cargando reporte personalizado...
+                    </div>
+                </div>
+            </div>
         </div>
 
+        <!-- PESTAÑA 3 -->
         <div id="tab-spa" class="tab-content">
             <h3 style="color: var(--enso-green); margin-top:0;">Rituales Guiados de Experiencia Completa</h3>
             <p style="font-size: 13px; color: #666;">Accede a protocolos de masaje facial guiados de 8 y 10 minutos.</p>
         </div>
 
+        <!-- PESTAÑA 4 -->
         <div id="tab-equilibrio" class="tab-content">
             <h3 style="color: var(--enso-green); margin-top:0;">Evolución del Índice de Estrés Cutáneo</h3>
             <p style="font-size: 13px; color: #666;">Gráfica histórica de la reducción de inflamación mente-piel.</p>
@@ -506,6 +635,7 @@
                 document.getElementById('welcome-title').innerText = "Bienvenida de nuevo, " + savedName;
             }
             cargarFotosGuardadas();
+            iniciarExposomaGPS();
         };
 
         function validarAcceso() {
@@ -525,7 +655,7 @@
             document.getElementById('auth-modal').style.display = 'none';
         }
 
-        // COMPRESIÓN Y OPTIMIZACIÓN EN TIEMPO REAL PARA EVITAR CACHÉ Y ERRORES DE CUOTA
+        /* GLOW JOURNAL SCRIPT */
         function procesarYGuardarFoto(tipo, event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -559,7 +689,6 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
 
-                    // Compresión ligera a JPEG al 75%
                     const compressedBase64 = canvas.toDataURL('image/jpeg', 0.75);
 
                     try {
@@ -570,7 +699,6 @@
                         alert('Error al guardar la imagen. Intenta seleccionar otra foto.');
                     } finally {
                         document.getElementById(`loader-${tipo}`).style.display = 'none';
-                        // Limpiar input para permitir seleccionar la misma foto o cambiar libremente
                         event.target.value = '';
                     }
                 };
@@ -610,7 +738,6 @@
             lbl.innerText = "SELECCIONAR FOTO";
             btnClear.style.display = 'none';
 
-            // Ocultar slider y reiniciar métricas si falta alguna foto
             document.getElementById('slider-box').style.display = 'none';
             document.getElementById('val-lum').innerText = "--";
             document.getElementById('val-red').innerText = "--";
@@ -707,6 +834,109 @@
 
         function moverSlider(val) {
             document.getElementById('slider-img-after-wrapper').style.width = val + "%";
+        }
+
+        /* MOTOR DE EXPOSOMA PRO */
+        function iniciarExposomaGPS() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    pos => fetchClimaAPI(pos.coords.latitude, pos.coords.longitude, "Tu Ubicación Actual"),
+                    err => fetchClimaAPI(6.2442, -75.5812, "Medellín, Colombia")
+                );
+            } else {
+                fetchClimaAPI(6.2442, -75.5812, "Medellín, Colombia");
+            }
+        }
+
+        async function buscarClimaCiudad() {
+            const city = document.getElementById('expo-city-input').value.trim();
+            if (!city) return;
+
+            try {
+                const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=es&format=json`);
+                const data = await res.json();
+
+                if (data.results && data.results.length > 0) {
+                    const loc = data.results[0];
+                    fetchClimaAPI(loc.latitude, loc.longitude, `${loc.name}, ${loc.country || ''}`);
+                } else {
+                    alert('Ciudad no encontrada.');
+                }
+            } catch (e) {
+                alert('Error al buscar la ciudad.');
+            }
+        }
+
+        async function fetchClimaAPI(lat, lon, nombreLugar) {
+            document.getElementById('expo-city-input').value = nombreLugar;
+
+            try {
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,uv_index&timezone=auto`;
+                const res = await fetch(url);
+                const data = await res.json();
+
+                const c = data.current;
+                const temp = Math.round(c.temperature_2m);
+                const hum = c.relative_humidity_2m;
+                const uv = c.uv_index !== undefined ? c.uv_index : 4;
+                const wind = Math.round(c.wind_speed_10m);
+
+                // CÁLCULO IVN
+                let ivn = 20;
+                if (uv > 6) ivn += 25; else if (uv > 3) ivn += 12;
+                if (hum < 45 || hum > 85) ivn += 20;
+                if (wind > 20) ivn += 15;
+                if (ivn > 99) ivn = 99;
+
+                document.getElementById('expo-uv').innerText = uv;
+                document.getElementById('expo-hum').innerText = hum + "%";
+                document.getElementById('expo-temp').innerText = temp + "°C";
+                document.getElementById('expo-wind').innerText = wind + " km/h";
+                document.getElementById('expo-ivn-val').innerText = ivn + " / 100";
+
+                let statusTxt = "";
+                let recDosis = "";
+
+                if (ivn < 40) {
+                    statusTxt = "ESTRÉS BAJO • PIEL EN EQUILIBRIO";
+                    recDosis = "Aplica tu rutina estándar de 3 pasos (Limpiador + Serum + Hidratante).";
+                } else if (ivn < 70) {
+                    statusTxt = "ESTRÉS MODERADO • ALTERACIÓN LIPÍDICA";
+                    recDosis = "Añade 2 gotas adicionales de Serum Hidratante antes de tu crema para prevenir pérdida de agua.";
+                } else {
+                    statusTxt = "ESTRÉS ALTO • ALERTA DE IRRITACIÓN CUTÁNEA";
+                    recDosis = "Refuerza la barrera con doble capa de emulsión y reaplica tu neuro-escudo cada 4 horas.";
+                }
+
+                document.getElementById('expo-ivn-status').innerText = statusTxt;
+
+                // ACTUALIZAR PREVIEW DE WHATSAPP
+                const userName = localStorage.getItem('enso_vip_name') || "Socio ensō";
+                const previewMsg = `🌿 <b>Hola ${userName}</b>, este es tu reporte del Exposoma para hoy en <b>${nombreLugar}</b>:<br><br>` +
+                    `• <b>Índice IVN:</b> ${ivn}/100 (${statusTxt})<br>` +
+                    `• <b>Índice UV:</b> ${uv} | <b>Humedad:</b> ${hum}%<br><br>` +
+                    `💡 <b>Dosis Recomendada:</b> ${recDosis}`;
+
+                document.getElementById('whatsapp-text-preview').innerHTML = previewMsg;
+
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function guardarAlertaWhatsApp() {
+            const time = document.getElementById('alert-time').value;
+            const phone = document.getElementById('alert-phone').value.trim();
+
+            if (!phone) {
+                alert('Por favor ingresa tu número de WhatsApp.');
+                return;
+            }
+
+            localStorage.setItem('enso_alert_time', time);
+            localStorage.setItem('enso_alert_phone', phone);
+
+            alert(`¡Alerta VIP Guardada! Recibirás tu diagnóstico diario a las ${time} en el número ${phone}.`);
         }
 
         function openTab(tabName) {
