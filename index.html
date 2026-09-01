@@ -387,7 +387,7 @@
             color: var(--enso-green);
         }
 
-        /* --- REGLAS RESPONSIVE PARA DISPOSITIVOS MÓVILES (SMARTPHONES Y TABLETS) --- */
+        /* --- REGLAS RESPONSIVE PARA DISPOSITIVOS MÓVILES --- */
         @media (max-width: 900px) {
             #dashboard-view {
                 flex-direction: column;
@@ -417,7 +417,7 @@
             }
 
             .main-header-logo {
-                display: none; /* Se muestra en la barra superior móvil */
+                display: none;
             }
 
             .banner-container {
@@ -434,7 +434,7 @@
             .brand-manifesto p { font-size: 13.5px; }
 
             .apps-grid-2x2 {
-                grid-template-columns: 1fr; /* Matriz colapsa a 1 columna vertical en móvil */
+                grid-template-columns: 1fr;
                 gap: 16px;
                 margin-bottom: 30px;
             }
@@ -465,7 +465,7 @@
     <div id="login-view">
         <div class="login-card">
             <img src="logo.png" alt="ensō logo" class="logo-login" onerror="this.style.display='none';">
-        
+            <h2>ensō</h2>
             <p>Comunidad Privada Club ensō</p>
 
             <form id="login-form" onsubmit="validarLogin(event)">
@@ -529,7 +529,7 @@
                     <h3>Unidad de Origen: Piel & Mente</h3>
                     <p>ENSO es una marca de cuidado fundada sobre la idea central de la unidad de origen entre piel y mente.<br><br>
                     Inspirada en la <strong>“psicodermatología”</strong>, pone énfasis en que <em>“lo que tu mente siente, tu piel lo narra”</em> – una filosofía que reconoce la conexión psicológica de la piel con la identidad y el bienestar interno.<br><br>
-                    Su mensaje clave es que ENSO no solo trata síntomas externos, sino que <strong>restaura el diálogo sagrado entre tu interior y tu exterior</strong>, convirtiendo el cuidado de la piel en un acto de recognition del origen indivisible del ser.</p>
+                    Su mensaje clave es que ENSO no solo trata síntomas externos, sino que <strong>restaura el diálogo sagrado entre tu interior y tu exterior</strong>, convirtiendo el cuidado de la piel en un acto de reconocimiento del origen indivisible del ser.</p>
                 </div>
 
                 <!-- GRID 2X2 RESPONSIVE -->
@@ -580,9 +580,9 @@
                 </div>
             </div>
 
-            <!-- EMBED RESPONSIVE PARA APPS -->
+            <!-- EMBED RESPONSIVE PARA APPS CON PERMISO DE CÁMARA DIRECTO -->
             <div id="iframe-wrapper">
-                <iframe id="iframe-container" src=""></iframe>
+                <iframe id="iframe-container" src="" allow="camera *; microphone *; autoplay *"></iframe>
             </div>
 
             <!-- FOOTER CON BOTONES CON ÍCONOS -->
@@ -614,7 +614,8 @@
     </div>
 
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwfsRzqdhHeAqCbtxPpWQdt9mfxnPsAp4S_qs-mz_-0SC6Ip98JNXXLuXzJj-T3hMZAWw/exec";
+        // REEMPLAZA ESTA VARIABLE CON LA URL DE TU GOOGLE APPS SCRIPT
+        const WEB_APP_URL = "URL_DE_TU_APPS_SCRIPT_AQUI";
 
         async function validarLogin(e) {
             e.preventDefault();
@@ -659,9 +660,13 @@
             document.getElementById('home-section').style.display = 'none';
             const wrapper = document.getElementById('iframe-wrapper');
             const iframe = document.getElementById('iframe-container');
+            
+            // ASIGNAR URL Y ATRIBUTO DE PERMISOS EXPLÍCITOS DE CÁMARA
             iframe.src = url;
+            iframe.setAttribute('allow', 'camera *; microphone *; autoplay *');
             wrapper.style.display = 'block';
 
+            // CERRAR MENÚ MÓVIL AL SELECCIONAR UNA APP
             document.getElementById('sidebar').classList.remove('active');
             document.getElementById('overlay').classList.remove('active');
         }
