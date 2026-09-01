@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ensō | Glow Club Private Hub</title>
+    <title>Club ensō | Hub Exclusivo</title>
     <style>
         :root {
             --enso-green: #2C3E35;
@@ -12,752 +12,546 @@
             --enso-card: #FFFFFF;
             --enso-text: #2B2B2B;
             --enso-gold: #C5A059;
-            --enso-alert-low: #5B8C5A;
-            --enso-alert-mid: #D99B26;
-            --enso-alert-high: #B84A39;
+            --enso-soft: #EAE6DB;
         }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Helvetica Neue', Arial, sans-serif;
             background-color: var(--enso-bg);
             color: var(--enso-text);
-            margin: 0;
-            padding: 0;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             min-height: 100vh;
         }
 
-        header {
+        /* 1. VENTANA DE LOGIN */
+        #login-view {
             width: 100%;
-            background-color: var(--enso-green);
-            color: white;
-            padding: 20px 0;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        header img {
-            max-height: 100px;
-            width: auto;
-            filter: brightness(0) invert(1);
-            margin-bottom: 8px;
-        }
-
-        .club-badge {
-            background: var(--enso-gold);
-            color: var(--enso-green);
-            font-size: 10px;
-            font-weight: bold;
-            padding: 3px 10px;
-            border-radius: 12px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        .auth-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(44, 62, 53, 0.95);
-            backdrop-filter: blur(5px);
-            z-index: 1000;
             display: flex;
             align-items: center;
             justify-content: center;
+            background: var(--enso-green);
+            padding: 20px;
         }
 
-        .auth-card {
-            background: var(--enso-card);
-            padding: 35px 30px;
+        .login-card {
+            background: white;
+            padding: 45px 35px;
             border-radius: 16px;
             max-width: 420px;
-            width: 88%;
+            width: 100%;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            border: 1px solid var(--enso-gold);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
         }
 
-        .auth-card img.modal-logo {
-            max-height: 75px;
+        .login-card img.logo-login {
+            max-height: 90px;
             width: auto;
-            margin-bottom: 12px;
-        }
-
-        .auth-card h2 {
-            color: var(--enso-green);
-            margin: 10px 0 5px 0;
-            font-weight: 300;
-            font-size: 24px;
-        }
-
-        .auth-card p {
-            font-size: 13px;
-            color: #666;
-            line-height: 1.4;
-            margin-bottom: 25px;
-        }
-
-        .auth-input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 12px;
-            border: 1px solid var(--enso-light-green);
-            border-radius: 6px;
-            font-size: 13px;
-            box-sizing: border-box;
-            background: var(--enso-bg);
-            outline: none;
-        }
-
-        .btn-activate {
-            width: 100%;
-            background: var(--enso-green);
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            cursor: pointer;
-            margin-top: 5px;
-        }
-
-        .container {
-            max-width: 900px;
-            width: 92%;
-            margin: 25px auto;
-            box-sizing: border-box;
-        }
-
-        .user-welcome {
-            background: var(--enso-card);
-            border: 1px solid var(--enso-light-green);
-            border-radius: 12px;
-            padding: 20px 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-        }
-
-        .user-welcome h3 {
-            margin: 0 0 5px 0;
-            color: var(--enso-green);
-            font-weight: 400;
-            font-size: 20px;
-        }
-
-        .user-welcome p {
-            margin: 0;
-            font-size: 13px;
-            color: #666;
-        }
-
-        .membership-status {
-            text-align: right;
-        }
-
-        .status-pill {
-            display: inline-block;
-            background: rgba(197, 160, 89, 0.15);
-            color: var(--enso-gold);
-            border: 1px solid var(--enso-gold);
-            font-size: 11px;
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-weight: bold;
-        }
-
-        .tab-menu {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            overflow-x: auto;
-            padding-bottom: 5px;
-        }
-
-        .tab-btn {
-            background: var(--enso-card);
-            border: 1px solid var(--enso-light-green);
-            color: var(--enso-text);
-            padding: 12px 18px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.2s ease;
-        }
-
-        .tab-btn:hover, .tab-btn.active {
-            background: var(--enso-green);
-            color: white;
-            border-color: var(--enso-green);
-        }
-
-        .tab-content {
-            display: none;
-            background: var(--enso-card);
-            border-radius: 12px;
-            padding: 25px;
-            border: 1px solid rgba(0,0,0,0.03);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .vip-card {
-            background: var(--enso-bg);
-            border: 1px solid var(--enso-light-green);
-            border-radius: 10px;
-            padding: 20px;
             margin-bottom: 15px;
         }
 
-        .vip-tag {
-            background: var(--enso-gold);
-            color: white;
-            font-size: 9px;
-            font-weight: bold;
-            padding: 2px 8px;
-            border-radius: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        .login-card h2 {
+            color: var(--enso-green);
+            font-weight: 300;
+            letter-spacing: 3px;
+            margin-bottom: 5px;
+            font-size: 26px;
         }
 
-        .journal-upload-box {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+        .login-card p {
+            color: var(--enso-gold);
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+            text-align: left;
+        }
+
+        .form-group label {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--enso-light-green);
+            border-radius: 8px;
+            outline: none;
+            font-size: 14px;
+            background: var(--enso-bg);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: var(--enso-gold);
+            color: var(--enso-green);
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 13px;
+            transition: background 0.2s;
+        }
+
+        .btn-login:hover {
+            background: #b38e48;
+        }
+
+        /* 2. VISTA DE DASHBOARD / HUB */
+        #dashboard-view {
+            display: none;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR VERTICAL */
+        .sidebar {
+            width: 280px;
+            background: var(--enso-green);
+            color: white;
+            padding: 35px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        .sidebar .logo-sidebar {
+            max-height: 100px;
+            width: auto;
+            display: block;
+            margin: 0 auto 25px auto;
+        }
+
+        .menu-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .menu-list a {
+            color: var(--enso-light-green);
+            text-decoration: none;
+            font-size: 13px;
+            padding: 12px 14px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: block;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-list a:hover, .menu-list a.active {
+            background: rgba(197, 160, 89, 0.25);
+            color: var(--enso-gold);
+            font-weight: bold;
+        }
+
+        /* CONTENIDO PRINCIPAL */
+        .main-content {
+            flex-grow: 1;
+            padding: 35px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .main-header-logo {
+            text-align: center;
             margin-bottom: 25px;
         }
 
-        @media (max-width: 600px) {
-            .journal-upload-box {
+        .main-header-logo img {
+            max-height: 110px;
+            width: auto;
+        }
+
+        .banner-container {
+            width: 100%;
+            max-height: 260px;
+            border-radius: 14px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            background: var(--enso-soft);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+        }
+
+        .banner-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* MANIFIESTO E IDENTIDAD */
+        .brand-manifesto {
+            background: var(--enso-card);
+            border-left: 5px solid var(--enso-gold);
+            padding: 28px;
+            border-radius: 10px;
+            margin-bottom: 35px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+
+        .brand-manifesto h3 {
+            color: var(--enso-green);
+            font-size: 20px;
+            margin-bottom: 12px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .brand-manifesto p {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #444;
+        }
+
+        /* GRID MATRIZ 2X2 PARA LAS APPS */
+        .apps-grid-2x2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 850px) {
+            .apps-grid-2x2 {
                 grid-template-columns: 1fr;
             }
         }
 
-        .photo-slot {
-            background: var(--enso-bg);
-            border: 2px dashed var(--enso-light-green);
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            position: relative;
+        .app-card-large {
+            background: white;
+            border: 1px solid var(--enso-light-green);
+            border-radius: 14px;
+            padding: 30px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.03);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-top: 4px solid var(--enso-green);
         }
 
-        .photo-slot.active {
-            border-style: solid;
-            border-color: var(--enso-gold);
+        .app-card-large:hover {
+            transform: translateY(-5px);
+            border-top-color: var(--enso-gold);
+            box-shadow: 0 8px 25px rgba(44, 62, 53, 0.12);
         }
 
-        .photo-preview {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-            display: none;
+        .app-card-large h4 {
+            color: var(--enso-green);
+            font-size: 18px;
             margin-bottom: 10px;
+            font-weight: bold;
         }
 
-        .file-input {
-            display: none;
+        .app-card-large .app-desc {
+            font-size: 13.5px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
         }
 
-        .upload-label {
+        .app-card-large .app-benefits {
+            background: var(--enso-bg);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #333;
+            border-left: 3px solid var(--enso-gold);
+        }
+
+        .app-card-large .app-benefits strong {
+            color: var(--enso-green);
+            display: block;
+            margin-bottom: 3px;
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+
+        /* FOOTER CON BOTONES DE ICONOS SOCIALES */
+        footer {
+            border-top: 1px solid var(--enso-light-green);
+            padding-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .social-links-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .social-btn {
             background: var(--enso-green);
             color: white;
-            padding: 8px 14px;
-            border-radius: 6px;
-            font-size: 11px;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
             font-weight: bold;
-            cursor: pointer;
-            display: inline-block;
-            margin-top: 5px;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
         }
 
-        .clear-btn {
-            background: transparent;
-            color: var(--enso-alert-high);
-            border: 1px solid var(--enso-alert-high);
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 10px;
-            cursor: pointer;
-            margin-left: 5px;
+        .social-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .social-btn:hover {
+            background: var(--enso-gold);
+            color: var(--enso-green);
+            transform: translateY(-2px);
+        }
+
+        /* CONTENEDOR IFRAME EMBEBIDO */
+        #iframe-container {
             display: none;
-        }
-
-        .slider-container {
-            position: relative;
-            width: 100%;
-            height: 320px;
-            overflow: hidden;
-            border-radius: 12px;
-            border: 1px solid var(--enso-gold);
-            margin: 20px 0;
-            display: none;
-        }
-
-        .slider-img {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
-        }
-
-        .slider-img-after {
-            width: 50%;
-            z-index: 2;
-            border-right: 2px solid var(--enso-gold);
-        }
-
-        .slider-range {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            z-index: 3;
-            cursor: ew-resize;
-        }
-
-        .slider-badge {
-            position: absolute;
-            bottom: 12px;
-            background: rgba(44, 62, 53, 0.85);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 10px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            z-index: 4;
-        }
-
-        .loader-spinner {
-            display: none;
-            font-size: 11px;
-            color: var(--enso-gold);
-            margin-top: 6px;
-            font-weight: bold;
-        }
-
-        /* IFRAME INTEGRACIÓN CLIMA REAL */
-        .expo-iframe {
-            width: 100%;
-            height: 750px;
+            min-height: 85vh;
             border: none;
-            border-radius: 10px;
-            background: #FAF9F6;
+            border-radius: 12px;
         }
     </style>
 </head>
 <body>
 
-    <div id="auth-modal" class="auth-overlay">
-        <div class="auth-card">
-            <img src="logo.png" alt="ensō logo" class="modal-logo" onerror="this.style.display='none'; document.getElementById('modal-alt-title').style.display='block';">
-            <h1 id="modal-alt-title" style="display:none; margin:0 0 10px 0; font-size:26px; letter-spacing:4px; font-weight:300; color:var(--enso-green);">ensō</h1>
+    <!-- 1. VISTA DE LOGIN CON LOGO -->
+    <div id="login-view">
+        <div class="login-card">
+            <img src="logo.png" alt="ensō logo" class="logo-login" onerror="this.style.display='none';">
             
-            <span class="club-badge">ACCESO EXCLUSIVO</span>
-            <h2>ensō Glow Club</h2>
-            <p>Ingresa tus datos y el código de invitación incluido en tu Kit de Neurocosmética para activar 3 meses de acceso VIP.</p>
-            
-            <input type="text" id="user-name" class="auth-input" placeholder="Tu Nombre Completo">
-            <input type="email" id="user-email" class="auth-input" placeholder="Tu Correo Electrónico">
-            <input type="text" id="vip-code" class="auth-input" placeholder="Código de Invitación o N° de Pedido" style="text-transform: uppercase;">
-            
-            <button class="btn-activate" onclick="validarAcceso()">ACTIVAR MI MEMBRESÍA VIP</button>
+            <p>Comunidad Privada Club ensō</p>
+
+            <form id="login-form" onsubmit="validarLogin(event)">
+                <div class="form-group">
+                    <label>Correo Electrónico</label>
+                    <input type="email" id="email" required placeholder="tu@correo.com">
+                </div>
+                <div class="form-group">
+                    <label>Contraseña / Celular</label>
+                    <input type="password" id="password" required placeholder="Ingresa tu celular">
+                </div>
+                <button type="submit" class="btn-login" id="btn-submit">INGRESAR AL CLUB</button>
+            </form>
+            <p id="error-msg" style="color: #d9534f; margin-top: 15px; display: none; font-size: 12px;"></p>
         </div>
     </div>
 
-    <header>
-        <img src="logo.png" alt="ensō logo" onerror="this.style.display='none'; document.getElementById('alt-title').style.display='block';">
-        <h1 id="alt-title" style="display:none; margin:0; font-size:28px; letter-spacing:4px; font-weight:300;">ensō</h1>
-        <span class="club-badge">GLOW CLUB • PORTAL PRIVADO</span>
-    </header>
-
-    <div class="container">
-        <div class="user-welcome">
+    <!-- 2. VISTA DASHBOARD DEL CLUB -->
+    <div id="dashboard-view">
+        <!-- SIDEBAR IZQUIERDA -->
+        <div class="sidebar">
             <div>
-                <h3 id="welcome-title">Bienvenida al Club</h3>
-                <p>Nivel de Membresía: <b>Socio Platinum</b> (Piel en fase de Regeneración)</p>
+                <img src="logo.png" alt="ensō logo" class="logo-sidebar" onerror="this.style.display='none';">
+                <ul class="menu-list">
+                    <li><a href="#" onclick="mostrarSeccion('home')" class="active" id="m-home">🏠 Inicio & Manifiesto</a></li>
+                    <li><a href="#" onclick="mostrarIframe('https://clima.ensocare.com.co')" id="m-clima">⛅ App Clima / Exposoma</a></li>
+                    <li><a href="#" onclick="mostrarIframe('https://ritual.ensocare.com.co')" id="m-ritual">🧘 App Ritual & Spa</a></li>
+                    <li><a href="#" onclick="mostrarIframe('https://equilibrio.ensocare.com.co')" id="m-equilibrio">⚖️ App Equilibrio</a></li>
+                    <li><a href="#" onclick="mostrarIframe('https://valoracion.ensocare.com.co')" id="m-biometria">🔍 App Valoración Biométrica</a></li>
+                    <li><a href="https://ensocare.com.co" target="_blank">🛍️ Tienda Oficial</a></li>
+                    <li><a href="https://wa.link/53w0gm" target="_blank">✉️ Contáctanos</a></li>
+                </ul>
             </div>
-            <div class="membership-status">
-                <span class="status-pill">MIEMBRO VIP ACTIVO</span>
-                <div style="font-size: 10px; color: #888; margin-top: 4px;">Acceso Desbloqueado: 90 Días</div>
-            </div>
+            <a href="#" onclick="logout()" style="color: #E8EBE4; font-size: 12px; text-decoration: none; text-align: center;">🔒 Cerrar Sesión</a>
         </div>
 
-        <div class="tab-menu">
-            <button class="tab-btn active" onclick="openTab('journal')">📖 SKIN JOURNAL PRO</button>
-            <button class="tab-btn" onclick="openTab('exposoma')">🛡️ EXPOSOMA PRO & ALERTAS</button>
-            <button class="tab-btn" onclick="openTab('spa')">🧘 RITUAL SPA EXTENDIDO</button>
-            <button class="tab-btn" onclick="openTab('equilibrio')">📈 HISTÓRICO MENTE-PIEL</button>
-        </div>
-
-        <!-- PESTAÑA 1: GLOW JOURNAL -->
-        <div id="tab-journal" class="tab-content active">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
-                <h3 style="color: var(--enso-green); margin:0;">Análisis Algorítmico de Píxeles & Evolución</h3>
-                <span class="vip-tag">Motor DIP Local</span>
-            </div>
-            <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Sube o actualiza tus fotos libremente. El algoritmo redimensionará y procesará la matriz cromática para calcular el progreso sin saturar tu dispositivo.</p>
-            
-            <div class="journal-upload-box">
-                <div class="photo-slot" id="slot-before">
-                    <h4 style="margin:0 0 8px 0; color:var(--enso-green);">Semana 1 (Antes)</h4>
-                    <img id="img-before-preview" class="photo-preview">
-                    <div id="ph-before-text" style="font-size:11px; color:#888; margin: 30px 0;">Sin imagen guardada</div>
-                    <div id="loader-before" class="loader-spinner">Optimizando foto...</div>
-                    <div style="margin-top:5px;">
-                        <label id="lbl-before" class="upload-label" for="file-before">SELECCIONAR FOTO</label>
-                        <button id="btn-clear-before" class="clear-btn" onclick="eliminarFoto('before')">ELIMINAR</button>
-                        <input type="file" id="file-before" class="file-input" accept="image/*" onchange="procesarYGuardarFoto('before', event)">
-                    </div>
+        <!-- CONTENIDO CENTRAL -->
+        <div class="main-content">
+            <div id="home-section">
+                <!-- LOGO EN TAMAÑO GRANDE EN EL HEADER PRINCIPAL -->
+                <div class="main-header-logo">
+                    <img src="logo.png" alt="ensō logo" onerror="this.style.display='none'">
                 </div>
 
-                <div class="photo-slot" id="slot-after">
-                    <h4 style="margin:0 0 8px 0; color:var(--enso-green);">Semana Actual (Hoy)</h4>
-                    <img id="img-after-preview" class="photo-preview">
-                    <div id="ph-after-text" style="font-size:11px; color:#888; margin: 30px 0;">Sin imagen guardada</div>
-                    <div id="loader-after" class="loader-spinner">Optimizando foto...</div>
-                    <div style="margin-top:5px;">
-                        <label id="lbl-after" class="upload-label" for="file-after">SELECCIONAR FOTO</label>
-                        <button id="btn-clear-after" class="clear-btn" onclick="eliminarFoto('after')">ELIMINAR</button>
-                        <input type="file" id="file-after" class="file-input" accept="image/*" onchange="procesarYGuardarFoto('after', event)">
+                <!-- BANNER -->
+                <div class="banner-container">
+                    <img src="banner.jpg" alt="Club ensō Banner" onerror="this.parentElement.style.display='none'">
+                </div>
+
+                <!-- IDENTIDAD Y MANIFIESTO DE MARCA -->
+                <div class="brand-manifesto">
+                    <h3>Unidad de Origen: Piel & Mente</h3>
+                    <p>ENSO es una marca de cuidado fundada sobre la idea central de la unidad de origen entre piel y mente.<br><br>
+                    Inspirada en la <strong>“psicodermatología”</strong>, pone énfasis en que <em>“lo que tu mente siente, tu piel lo narra”</em> – una filosofía que reconoce la conexión psicológica de la piel con la identidad y el bienestar interno (p. ej., el ectodermo como tejido común de piel y sistema nervioso).<br><br>
+                    Su mensaje clave es que ENSO no solo trata síntomas externos, sino que <strong>restaura el diálogo sagrado entre tu interior y tu exterior</strong>, convirtiendo el cuidado de la piel en un acto de reconocimiento del origen indivisible del ser.</p>
+                </div>
+
+                <!-- MATRIZ 2X2 CON TARJETAS GRANDES Y DETALLADAS -->
+                <div class="apps-grid-2x2">
+                    <!-- APP 1: CLIMA -->
+                    <div class="app-card-large" onclick="mostrarIframe('https://clima.ensocare.com.co')">
+                        <div>
+                            <h4>⛅ App Clima & Exposoma</h4>
+                            <p class="app-desc">Monitoreo ambiental inteligente en tiempo real que evalúa la radiación UV, humedad y factores ambientales de tu ubicación.</p>
+                        </div>
+                        <div class="app-benefits">
+                            <strong>Beneficios Clave:</strong>
+                            Previene el estrés oxidativo adaptando la protección de tu barrera cutánea según las condiciones climáticas del día.
+                        </div>
+                    </div>
+
+                    <!-- APP 2: RITUAL -->
+                    <div class="app-card-large" onclick="mostrarIframe('https://ritual.ensocare.com.co')">
+                        <div>
+                            <h4>🧘 Spa Facial & Ritual Guiado</h4>
+                            <p class="app-desc">Secuencia de 3 pasos guiados combinada con estimulación sonora por frecuencias armónicas (432Hz, 528Hz, 741Hz).</p>
+                        </div>
+                        <div class="app-benefits">
+                            <strong>Beneficios Clave:</strong>
+                            Reduce el cortisol cutáneo, favorece la respiración consciente y maximiza la absorción celular de principios activos.
+                        </div>
+                    </div>
+
+                    <!-- APP 3: EQUILIBRIO -->
+                    <div class="app-card-large" onclick="mostrarIframe('https://equilibrio.ensocare.com.co')">
+                        <div>
+                            <h4>⚖️ Calculadora de Equilibrio</h4>
+                            <p class="app-desc">Evaluación holística que analiza el balance psico-emocional y su impacto directo en el ecosistema de la piel.</p>
+                        </div>
+                        <div class="app-benefits">
+                            <strong>Beneficios Clave:</strong>
+                            Identifica detonantes de sensibilidad y ofrece recomendaciones personalizadas para restaurar la homeostasis neurocutánea.
+                        </div>
+                    </div>
+
+                    <!-- APP 4: VALORACIÓN BIOMÉTRICA -->
+                    <div class="app-card-large" onclick="mostrarIframe('https://valoracion.ensocare.com.co')">
+                        <div>
+                            <h4>🔍 Valoración Biométrica Facial</h4>
+                            <p class="app-desc">Diagnóstico computacional dinámico de 6 zonas clave del rostro para medir métricas de hidratación, tono y firmeza.</p>
+                        </div>
+                        <div class="app-benefits">
+                            <strong>Beneficios Clave:</strong>
+                            Permite un seguimiento preciso de la evolución de tu piel con recomendaciones específicas para tu estado actual.
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <canvas id="analysis-canvas" style="display:none;"></canvas>
+            <!-- CONTENEDOR PARA EMBEBER LAS APPS EN PANTALLA COMPLETA -->
+            <iframe id="iframe-container" src=""></iframe>
 
-            <div id="slider-box" class="slider-container">
-                <span class="slider-badge" style="left:12px;">SEMANA ACTUAL</span>
-                <span class="slider-badge" style="right:12px;">SEMANA 1</span>
-                <img id="slider-img-before" class="slider-img">
-                <div id="slider-img-after-wrapper" class="slider-img slider-img-after">
-                    <img id="slider-img-after" class="slider-img" style="width: 100%; height:100%; object-fit:cover;">
+            <!-- FOOTER CON BOTONES DE ICONOS SVG OFICIALES -->
+            <footer>
+                <div>© 2026 ensō care. Todos los derechos reservados.</div>
+                <div class="social-links-buttons">
+                    <!-- WHATSAPP -->
+                    <a href="https://wa.link/53w0gm" target="_blank" class="social-btn">
+                        <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                        WhatsApp
+                    </a>
+
+                    <!-- CORREO -->
+                    <a href="mailto:info.ensocare@gmail.com" class="social-btn">
+                        <svg viewBox="0 0 24 24"><path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.104 10-8.104v11.817h-20z"/></svg>
+                        Correo
+                    </a>
+
+                    <!-- INSTAGRAM -->
+                    <a href="https://www.instagram.com/ensocare.co" target="_blank" class="social-btn">
+                        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        Instagram
+                    </a>
+
+                    <!-- TIKTOK -->
+                    <a href="https://www.tiktok.com/@ensocare.co" target="_blank" class="social-btn">
+                        <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.82.56-1.36 1.51-1.38 2.51-.01.8.31 1.59.87 2.14.57.57 1.37.88 2.18.86 1.02-.01 2.01-.54 2.53-1.42.32-.54.49-1.17.48-1.8.02-3.99.01-7.98.01-11.97z"/></svg>
+                        TikTok
+                    </a>
                 </div>
-                <input type="range" min="0" max="100" value="50" class="slider-range" oninput="moverSlider(this.value)">
-            </div>
-
-            <div class="vip-card" style="margin-top:20px;">
-                <h4 style="margin:0 0 10px 0; color:var(--enso-green);">Resultados del Procesamiento Digital de Píxeles</h4>
-                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:15px; text-align:center;">
-                    <div>
-                        <div style="font-size:22px; font-weight:bold; color:var(--enso-gold);" id="val-lum">--</div>
-                        <div style="color:#777; font-size:10px; margin-top:2px;">Δ LUMINANCIA RELATIVA</div>
-                    </div>
-                    <div>
-                        <div style="font-size:22px; font-weight:bold; color:var(--enso-green);" id="val-red">--</div>
-                        <div style="color:#777; font-size:10px; margin-top:2px;">Δ ÍNDICE DE ERITEMA</div>
-                    </div>
-                    <div>
-                        <div style="font-size:22px; font-weight:bold; color:var(--enso-green);" id="val-uni">--</div>
-                        <div style="color:#777; font-size:10px; margin-top:2px;">UNIFORMIDAD CROMÁTICA</div>
-                    </div>
-                </div>
-                <div id="analysis-summary" style="margin-top:15px; font-size:12px; color:#555; background:white; padding:12px; border-radius:6px; display:none;"></div>
-            </div>
-        </div>
-
-        <!-- PESTAÑA 2: INTEGRA LA APP NATIVA DE CLIMA.ENSOCARE.COM.CO -->
-        <div id="tab-exposoma" class="tab-content">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
-                <h3 style="color: var(--enso-green); margin:0;">Monitor de Exposoma (Neuro-Escudo)</h3>
-                <span class="vip-tag">Aplicación Oficial</span>
-            </div>
-            <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Visualiza en tiempo real las variables ambientales y la sugerencia de dosis de la aplicación oficial de ensō.</p>
-
-            <!-- Carga idéntica de la app original clima.ensocare.com.co -->
-            <iframe src="https://enso-exposoma.vercel.app" class="expo-iframe" title="ensō Exposoma App" allow="geolocation"></iframe>
-
-            <!-- MÓDULO EXCLUSIVO CLUB: CONFIGURACIÓN DE ALERTAS POR WHATSAPP -->
-            <div class="vip-card" style="margin-top: 25px;">
-                <h4 style="margin:0 0 10px 0; color:var(--enso-green);">📱 Configuración de Alerta Diaria por WhatsApp</h4>
-                <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Como miembro del Club, configura la hora en que despiertas para recibir el reporte del exposoma y tu recomendación de dosis directo en tu celular.</p>
-
-                <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
-                    <div style="flex: 1; min-width: 180px;">
-                        <label style="font-size: 11px; color: #777; font-weight: bold;">HORA DE ENVÍO DIARIO:</label>
-                        <input type="time" id="alert-time" value="07:00" style="width: 100%; padding: 8px; border: 1px solid var(--enso-light-green); border-radius: 6px; margin-top: 4px; box-sizing: border-box;">
-                    </div>
-                    <div style="flex: 1; min-width: 180px;">
-                        <label style="font-size: 11px; color: #777; font-weight: bold;">NÚMERO DE WHATSAPP:</label>
-                        <input type="text" id="alert-phone" placeholder="+57 300 000 0000" style="width: 100%; padding: 8px; border: 1px solid var(--enso-light-green); border-radius: 6px; margin-top: 4px; box-sizing: border-box;">
-                    </div>
-                </div>
-
-                <button class="upload-label" style="width: 100%; text-align: center; margin-top: 15px; padding: 12px;" onclick="guardarAlertaWhatsApp()">ACTIVAR ALERTAS VIP EN MI WHATSAPP</button>
-            </div>
-        </div>
-
-        <!-- PESTAÑA 3 -->
-        <div id="tab-spa" class="tab-content">
-            <h3 style="color: var(--enso-green); margin-top:0;">Rituales Guiados de Experiencia Completa</h3>
-            <p style="font-size: 13px; color: #666;">Accede a protocolos de masaje facial guiados de 8 y 10 minutos.</p>
-        </div>
-
-        <!-- PESTAÑA 4 -->
-        <div id="tab-equilibrio" class="tab-content">
-            <h3 style="color: var(--enso-green); margin-top:0;">Evolución del Índice de Estrés Cutáneo</h3>
-            <p style="font-size: 13px; color: #666;">Gráfica histórica de la reducción de inflamación mente-piel.</p>
+            </footer>
         </div>
     </div>
 
     <script>
-        window.onload = function() {
-            const savedName = localStorage.getItem('enso_vip_name');
-            if (savedName) {
-                document.getElementById('auth-modal').style.display = 'none';
-                document.getElementById('welcome-title').innerText = "Bienvenida de nuevo, " + savedName;
-            }
-            cargarFotosGuardadas();
-        };
+        // PEGA AQUÍ LA URL DE TU GOOGLE APPS SCRIPT
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwfsRzqdhHeAqCbtxPpWQdt9mfxnPsAp4S_qs-mz_-0SC6Ip98JNXXLuXzJj-T3hMZAWw/exec";
 
-        function validarAcceso() {
-            const name = document.getElementById('user-name').value.trim();
-            const email = document.getElementById('user-email').value.trim();
-            const code = document.getElementById('vip-code').value.trim().toUpperCase();
+        async function validarLogin(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit');
+            const errorMsg = document.getElementById('error-msg');
+            btn.innerText = "VERIFICANDO...";
+            errorMsg.style.display = "none";
 
-            if (!name || !email || !code) {
-                alert('Por favor completa todos los campos para activar tu acceso.');
-                return;
-            }
+            const correo = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-            localStorage.setItem('enso_vip_name', name);
-            localStorage.setItem('enso_vip_email', email);
+            try {
+                const response = await fetch(WEB_APP_URL, {
+                    method: "POST",
+                    body: JSON.stringify({ correo: correo, password: password })
+                });
 
-            document.getElementById('welcome-title').innerText = "Bienvenida, " + name;
-            document.getElementById('auth-modal').style.display = 'none';
-        }
+                const data = await response.json();
 
-        /* GLOW JOURNAL SCRIPT */
-        function procesarYGuardarFoto(tipo, event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            document.getElementById(`loader-${tipo}`).style.display = 'block';
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 800;
-                    const MAX_HEIGHT = 800;
-                    let width = img.width;
-                    let height = img.height;
-
-                    if (width > height) {
-                        if (width > MAX_WIDTH) {
-                            height *= MAX_WIDTH / width;
-                            width = MAX_WIDTH;
-                        }
-                    } else {
-                        if (height > MAX_HEIGHT) {
-                            width *= MAX_HEIGHT / height;
-                            height = MAX_HEIGHT;
-                        }
-                    }
-
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-
-                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.75);
-
-                    try {
-                        localStorage.setItem('enso_img_' + tipo, compressedBase64);
-                        renderizarFoto(tipo, compressedBase64);
-                        ejecutarAlgoritmoReal();
-                    } catch (err) {
-                        alert('Error al guardar la imagen. Intenta seleccionar otra foto.');
-                    } finally {
-                        document.getElementById(`loader-${tipo}`).style.display = 'none';
-                        event.target.value = '';
-                    }
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function renderizarFoto(tipo, src) {
-            const preview = document.getElementById(`img-${tipo}-preview`);
-            const text = document.getElementById(`ph-${tipo}-text`);
-            const slot = document.getElementById(`slot-${tipo}`);
-            const lbl = document.getElementById(`lbl-${tipo}`);
-            const btnClear = document.getElementById(`btn-clear-${tipo}`);
-
-            preview.src = src;
-            preview.style.display = 'block';
-            text.style.display = 'none';
-            slot.classList.add('active');
-            lbl.innerText = "CAMBIAR FOTO";
-            btnClear.style.display = 'inline-block';
-        }
-
-        function eliminarFoto(tipo) {
-            localStorage.removeItem('enso_img_' + tipo);
-
-            const preview = document.getElementById(`img-${tipo}-preview`);
-            const text = document.getElementById(`ph-${tipo}-text`);
-            const slot = document.getElementById(`slot-${tipo}`);
-            const lbl = document.getElementById(`lbl-${tipo}`);
-            const btnClear = document.getElementById(`btn-clear-${tipo}`);
-
-            preview.src = '';
-            preview.style.display = 'none';
-            text.style.display = 'block';
-            slot.classList.remove('active');
-            lbl.innerText = "SELECCIONAR FOTO";
-            btnClear.style.display = 'none';
-
-            document.getElementById('slider-box').style.display = 'none';
-            document.getElementById('val-lum').innerText = "--";
-            document.getElementById('val-red').innerText = "--";
-            document.getElementById('val-uni').innerText = "--";
-            document.getElementById('analysis-summary').style.display = 'none';
-        }
-
-        function cargarFotosGuardadas() {
-            const b64Before = localStorage.getItem('enso_img_before');
-            const b64After = localStorage.getItem('enso_img_after');
-
-            if (b64Before) renderizarFoto('before', b64Before);
-            if (b64After) renderizarFoto('after', b64After);
-
-            if (b64Before && b64After) {
-                ejecutarAlgoritmoReal();
+                if (data.result === "success") {
+                    localStorage.setItem('enso_user', data.nombre);
+                    document.getElementById('login-view').style.display = 'none';
+                    document.getElementById('dashboard-view').style.display = 'flex';
+                } else {
+                    errorMsg.innerText = data.message || "Usuario o clave inválida.";
+                    errorMsg.style.display = "block";
+                }
+            } catch (err) {
+                errorMsg.innerText = "Error de conexión. Inténtalo de nuevo.";
+                errorMsg.style.display = "block";
+            } finally {
+                btn.innerText = "INGRESAR AL CLUB";
             }
         }
 
-        async function ejecutarAlgoritmoReal() {
-            const b64Before = localStorage.getItem('enso_img_before');
-            const b64After = localStorage.getItem('enso_img_after');
+        function mostrarIframe(url) {
+            document.getElementById('home-section').style.display = 'none';
+            const iframe = document.getElementById('iframe-container');
+            iframe.src = url;
+            iframe.style.display = 'block';
+        }
 
-            if (!b64Before || !b64After) return;
-
-            document.getElementById('slider-img-before').src = b64Before;
-            document.getElementById('slider-img-after').src = b64After;
-            document.getElementById('slider-box').style.display = 'block';
-
-            const metricsBefore = await analizarMatrizImagen(b64Before);
-            const metricsAfter = await analizarMatrizImagen(b64After);
-
-            const diffLum = Math.round(((metricsAfter.luminance - metricsBefore.luminance) / metricsBefore.luminance) * 100);
-            const diffErythema = Math.round(((metricsAfter.erythema - metricsBefore.erythema) / metricsBefore.erythema) * 100);
-            const statusUniformity = metricsAfter.stdDev < metricsBefore.stdDev ? "Mejorada (+18%)" : "Estable";
-
-            document.getElementById('val-lum').innerText = (diffLum >= 0 ? "+" : "") + diffLum + "%";
-            document.getElementById('val-red').innerText = (diffErythema <= 0 ? "" : "+") + diffErythema + "%";
-            document.getElementById('val-uni').innerText = statusUniformity;
-
-            const summaryBox = document.getElementById('analysis-summary');
-            summaryBox.style.display = 'block';
-
-            if (diffLum > 0 && diffErythema < 0) {
-                summaryBox.innerHTML = "<b>Diagnóstico Algorítmico:</b> Se detecta un incremento real en la reflectancia de fotones (mayor luminosidad) y una reducción en la saturación del canal rojo (disminución de inflamación o irritación visible).";
-            } else if (diffLum > 0) {
-                summaryBox.innerHTML = "<b>Diagnóstico Algorítmico:</b> La matriz cromática refleja un aumento en la dispersión de luz superficial. La barrera cutánea presenta mayor nivel de reflectancia natural.";
-            } else {
-                summaryBox.innerHTML = "<b>Diagnóstico Algorítmico:</b> Variación lumínica procesada. Asegúrate de capturar las fotografías bajo condiciones de luz similares para maximizar la resolución del análisis.";
+        function mostrarSeccion(sec) {
+            if (sec === 'home') {
+                document.getElementById('iframe-container').style.display = 'none';
+                document.getElementById('iframe-container').src = '';
+                document.getElementById('home-section').style.display = 'block';
             }
         }
 
-        function analizarMatrizImagen(base64Src) {
-            return new Promise((resolve) => {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.getElementById('analysis-canvas');
-                    const ctx = canvas.getContext('2d');
-                    
-                    canvas.width = 150;
-                    canvas.height = 150;
-                    ctx.drawImage(img, 0, 0, 150, 150);
-
-                    const imgData = ctx.getImageData(0, 0, 150, 150);
-                    const data = imgData.data;
-
-                    let totalLuminance = 0;
-                    let totalErythema = 0;
-                    let luminanceValues = [];
-
-                    for (let i = 0; i < data.length; i += 4) {
-                        const r = data[i];
-                        const g = data[i + 1];
-                        const b = data[i + 2];
-
-                        const lum = (0.299 * r) + (0.587 * g) + (0.114 * b);
-                        totalLuminance += lum;
-                        luminanceValues.push(lum);
-
-                        const ery = g > 0 ? (r / g) : 1;
-                        totalErythema += ery;
-                    }
-
-                    const avgLum = totalLuminance / (data.length / 4);
-                    const avgEry = totalErythema / (data.length / 4);
-                    const variance = luminanceValues.reduce((sq, val) => sq + Math.pow(val - avgLum, 2), 0) / luminanceValues.length;
-                    const stdDev = Math.sqrt(variance);
-
-                    resolve({ luminance: avgLum, erythema: avgEry, stdDev: stdDev });
-                };
-                img.src = base64Src;
-            });
-        }
-
-        function moverSlider(val) {
-            document.getElementById('slider-img-after-wrapper').style.width = val + "%";
-        }
-
-        function guardarAlertaWhatsApp() {
-            const time = document.getElementById('alert-time').value;
-            const phone = document.getElementById('alert-phone').value.trim();
-
-            if (!phone) {
-                alert('Por favor ingresa tu número de WhatsApp.');
-                return;
-            }
-
-            localStorage.setItem('enso_alert_time', time);
-            localStorage.setItem('enso_alert_phone', phone);
-
-            alert(`¡Alerta VIP Guardada! Recibirás tu diagnóstico diario a las ${time} en el número ${phone}.`);
-        }
-
-        function openTab(tabName) {
-            const contents = document.querySelectorAll('.tab-content');
-            contents.forEach(c => c.classList.remove('active'));
-
-            const buttons = document.querySelectorAll('.tab-btn');
-            buttons.forEach(b => b.classList.remove('active'));
-
-            document.getElementById('tab-' + tabName).classList.add('active');
-            event.currentTarget.classList.add('active');
+        function logout() {
+            localStorage.removeItem('enso_user');
+            location.reload();
         }
     </script>
 </body>
