@@ -387,7 +387,7 @@
             color: var(--enso-green);
         }
 
-        /* --- REGLAS RESPONSIVE PARA DISPOSITIVOS MÓVILES --- */
+        /* --- REGLAS RESPONSIVE PARA MÓVILES --- */
         @media (max-width: 900px) {
             #dashboard-view {
                 flex-direction: column;
@@ -465,7 +465,7 @@
     <div id="login-view">
         <div class="login-card">
             <img src="logo.png" alt="ensō logo" class="logo-login" onerror="this.style.display='none';">
-           
+            
             <p>Comunidad Privada Club ensō</p>
 
             <form id="login-form" onsubmit="validarLogin(event)">
@@ -491,7 +491,7 @@
             <button class="btn-hamburger" onclick="toggleMenu()">☰</button>
         </div>
 
-        <!-- OVERLAY DE CORTINA EN MÓVIL -->
+        <!-- OVERLAY EN MÓVIL -->
         <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
         <!-- SIDEBAR DE NAVEGACIÓN -->
@@ -514,17 +514,14 @@
         <!-- CONTENIDO PRINCIPAL -->
         <div class="main-content">
             <div id="home-section">
-                <!-- LOGO GRANDE PARA ESCRITORIO -->
                 <div class="main-header-logo">
                     <img src="logo.png" alt="ensō logo" onerror="this.style.display='none'">
                 </div>
 
-                <!-- BANNER -->
                 <div class="banner-container">
                     <img src="banner.jpg" alt="Club ensō Banner" onerror="this.parentElement.style.display='none'">
                 </div>
 
-                <!-- IDENTIDAD Y MANIFIESTO -->
                 <div class="brand-manifesto">
                     <h3>Unidad de Origen: Piel & Mente</h3>
                     <p>ENSO es una marca de cuidado fundada sobre la idea central de la unidad de origen entre piel y mente.<br><br>
@@ -532,7 +529,6 @@
                     Su mensaje clave es que ENSO no solo trata síntomas externos, sino que <strong>restaura el diálogo sagrado entre tu interior y tu exterior</strong>, convirtiendo el cuidado de la piel en un acto de reconocimiento del origen indivisible del ser.</p>
                 </div>
 
-                <!-- GRID 2X2 RESPONSIVE -->
                 <div class="apps-grid-2x2">
                     <div class="app-card-large" onclick="mostrarIframe('https://clima.ensocare.com.co')">
                         <div>
@@ -580,12 +576,12 @@
                 </div>
             </div>
 
-            <!-- EMBED RESPONSIVE PARA APPS CON PERMISO DE CÁMARA DIRECTO -->
+            <!-- EMBED RESPONSIVE CON CÁMARA Y GEOLOCALIZACIÓN -->
             <div id="iframe-wrapper">
-                <iframe id="iframe-container" src="" allow="camera *; microphone *; autoplay *"></iframe>
+                <iframe id="iframe-container" src="" allow="camera *; microphone *; geolocation *; autoplay *"></iframe>
             </div>
 
-            <!-- FOOTER CON BOTONES CON ÍCONOS -->
+            <!-- FOOTER -->
             <footer>
                 <div>© 2026 ensō care. Todos los derechos reservados.</div>
                 <div class="social-links-buttons">
@@ -600,7 +596,7 @@
                     </a>
 
                     <a href="https://www.instagram.com/ensocare.co" target="_blank" class="social-btn">
-                        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.163 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                         Instagram
                     </a>
 
@@ -614,7 +610,6 @@
     </div>
 
     <script>
-        // REEMPLAZA ESTA VARIABLE CON LA URL DE TU GOOGLE APPS SCRIPT
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwfsRzqdhHeAqCbtxPpWQdt9mfxnPsAp4S_qs-mz_-0SC6Ip98JNXXLuXzJj-T3hMZAWw/exec";
 
         async function validarLogin(e) {
@@ -661,12 +656,11 @@
             const wrapper = document.getElementById('iframe-wrapper');
             const iframe = document.getElementById('iframe-container');
             
-            // ASIGNAR URL Y ATRIBUTO DE PERMISOS EXPLÍCITOS DE CÁMARA
+            // PERMISOS DE CÁMARA Y GEOLOCALIZACIÓN
             iframe.src = url;
-            iframe.setAttribute('allow', 'camera *; microphone *; autoplay *');
+            iframe.setAttribute('allow', 'camera *; microphone *; geolocation *; autoplay *');
             wrapper.style.display = 'block';
 
-            // CERRAR MENÚ MÓVIL AL SELECCIONAR UNA APP
             document.getElementById('sidebar').classList.remove('active');
             document.getElementById('overlay').classList.remove('active');
         }
