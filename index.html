@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Club ensō | Hub Exclusivo</title>
     <style>
         :root {
@@ -21,13 +21,15 @@
             font-family: 'Helvetica Neue', Arial, sans-serif;
             background-color: var(--enso-bg);
             color: var(--enso-text);
-            display: flex;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         /* 1. VENTANA DE LOGIN */
         #login-view {
             width: 100%;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -37,7 +39,7 @@
 
         .login-card {
             background: white;
-            padding: 45px 35px;
+            padding: 40px 25px;
             border-radius: 16px;
             max-width: 420px;
             width: 100%;
@@ -46,7 +48,7 @@
         }
 
         .login-card img.logo-login {
-            max-height: 90px;
+            max-height: 80px;
             width: auto;
             margin-bottom: 15px;
         }
@@ -56,7 +58,7 @@
             font-weight: 300;
             letter-spacing: 3px;
             margin-bottom: 5px;
-            font-size: 26px;
+            font-size: 24px;
         }
 
         .login-card p {
@@ -65,7 +67,7 @@
             font-weight: bold;
             letter-spacing: 2px;
             text-transform: uppercase;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .form-group {
@@ -112,14 +114,44 @@
             background: #b38e48;
         }
 
-        /* 2. VISTA DE DASHBOARD / HUB */
+        /* 2. DASHBOARD / HUB EXCLUSIVO */
         #dashboard-view {
             display: none;
             width: 100%;
             min-height: 100vh;
+            flex-direction: row;
         }
 
-        /* SIDEBAR VERTICAL */
+        /* BARRA SUPERIOR MÓVIL (TOP BAR) */
+        .mobile-header {
+            display: none;
+            background: var(--enso-green);
+            color: white;
+            padding: 12px 20px;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+
+        .mobile-header img {
+            max-height: 40px;
+            width: auto;
+        }
+
+        .btn-hamburger {
+            background: none;
+            border: none;
+            color: var(--enso-gold);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            line-height: 1;
+        }
+
+        /* SIDEBAR / MENÚ NAVEGACIÓN */
         .sidebar {
             width: 280px;
             background: var(--enso-green);
@@ -129,10 +161,12 @@
             flex-direction: column;
             justify-content: space-between;
             flex-shrink: 0;
+            transition: transform 0.3s ease;
+            z-index: 99;
         }
 
         .sidebar .logo-sidebar {
-            max-height: 100px;
+            max-height: 90px;
             width: auto;
             display: block;
             margin: 0 auto 25px auto;
@@ -142,7 +176,7 @@
             list-style: none;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
 
         .menu-list a {
@@ -162,6 +196,14 @@
             font-weight: bold;
         }
 
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 98;
+        }
+
         /* CONTENIDO PRINCIPAL */
         .main-content {
             flex-grow: 1;
@@ -170,6 +212,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            width: 100%;
         }
 
         .main-header-logo {
@@ -198,11 +241,11 @@
             object-fit: cover;
         }
 
-        /* MANIFIESTO E IDENTIDAD */
+        /* MANIFIESTO */
         .brand-manifesto {
             background: var(--enso-card);
             border-left: 5px solid var(--enso-gold);
-            padding: 28px;
+            padding: 25px;
             border-radius: 10px;
             margin-bottom: 35px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.03);
@@ -210,19 +253,19 @@
 
         .brand-manifesto h3 {
             color: var(--enso-green);
-            font-size: 20px;
+            font-size: 19px;
             margin-bottom: 12px;
             font-weight: 300;
             letter-spacing: 1px;
         }
 
         .brand-manifesto p {
-            font-size: 15px;
+            font-size: 14.5px;
             line-height: 1.7;
             color: #444;
         }
 
-        /* GRID MATRIZ 2X2 PARA LAS APPS */
+        /* GRID MATRIZ 2X2 PARA APPS */
         .apps-grid-2x2 {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -230,17 +273,11 @@
             margin-bottom: 40px;
         }
 
-        @media (max-width: 850px) {
-            .apps-grid-2x2 {
-                grid-template-columns: 1fr;
-            }
-        }
-
         .app-card-large {
             background: white;
             border: 1px solid var(--enso-light-green);
             border-radius: 14px;
-            padding: 30px;
+            padding: 25px;
             box-shadow: 0 4px 18px rgba(0,0,0,0.03);
             transition: all 0.3s ease;
             cursor: pointer;
@@ -251,22 +288,22 @@
         }
 
         .app-card-large:hover {
-            transform: translateY(-5px);
+            transform: translateY(-4px);
             border-top-color: var(--enso-gold);
             box-shadow: 0 8px 25px rgba(44, 62, 53, 0.12);
         }
 
         .app-card-large h4 {
             color: var(--enso-green);
-            font-size: 18px;
+            font-size: 17px;
             margin-bottom: 10px;
             font-weight: bold;
         }
 
         .app-card-large .app-desc {
-            font-size: 13.5px;
+            font-size: 13px;
             color: #555;
-            line-height: 1.6;
+            line-height: 1.5;
             margin-bottom: 15px;
         }
 
@@ -288,7 +325,24 @@
             letter-spacing: 1px;
         }
 
-        /* FOOTER CON BOTONES DE ICONOS SOCIALES */
+        /* IFRAME DE APPS EMBEBIDAS RESPONSIVE */
+        #iframe-wrapper {
+            display: none;
+            width: 100%;
+            height: 82vh;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+
+        #iframe-container {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* FOOTER CON BOTONES */
         footer {
             border-top: 1px solid var(--enso-light-green);
             padding-top: 25px;
@@ -296,14 +350,14 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 20px;
-            font-size: 13px;
+            gap: 15px;
+            font-size: 12px;
             color: #666;
         }
 
         .social-links-buttons {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
         }
 
@@ -311,47 +365,107 @@
             background: var(--enso-green);
             color: white;
             text-decoration: none;
-            padding: 8px 16px;
+            padding: 8px 14px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
             letter-spacing: 0.5px;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             transition: all 0.2s ease;
         }
 
         .social-btn svg {
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
             fill: currentColor;
         }
 
         .social-btn:hover {
             background: var(--enso-gold);
             color: var(--enso-green);
-            transform: translateY(-2px);
         }
 
-        /* CONTENEDOR IFRAME EMBEBIDO */
-        #iframe-container {
-            display: none;
-            width: 100%;
-            height: 100%;
-            min-height: 85vh;
-            border: none;
-            border-radius: 12px;
+        /* --- REGLAS RESPONSIVE PARA DISPOSITIVOS MÓVILES (SMARTPHONES Y TABLETS) --- */
+        @media (max-width: 900px) {
+            #dashboard-view {
+                flex-direction: column;
+            }
+
+            .mobile-header {
+                display: flex;
+            }
+
+            .sidebar {
+                position: fixed;
+                top: 0; left: 0; bottom: 0;
+                transform: translateX(-100%);
+                box-shadow: 5px 0 25px rgba(0,0,0,0.3);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .overlay.active {
+                display: block;
+            }
+
+            .main-content {
+                padding: 20px 15px;
+            }
+
+            .main-header-logo {
+                display: none; /* Se muestra en la barra superior móvil */
+            }
+
+            .banner-container {
+                max-height: 180px;
+                margin-bottom: 20px;
+            }
+
+            .brand-manifesto {
+                padding: 18px;
+                margin-bottom: 25px;
+            }
+
+            .brand-manifesto h3 { font-size: 17px; }
+            .brand-manifesto p { font-size: 13.5px; }
+
+            .apps-grid-2x2 {
+                grid-template-columns: 1fr; /* Matriz colapsa a 1 columna vertical en móvil */
+                gap: 16px;
+                margin-bottom: 30px;
+            }
+
+            .app-card-large {
+                padding: 20px;
+            }
+
+            #iframe-wrapper {
+                height: 78vh;
+            }
+
+            footer {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .social-links-buttons {
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- 1. VISTA DE LOGIN CON LOGO -->
+    <!-- 1. VISTA DE LOGIN -->
     <div id="login-view">
         <div class="login-card">
             <img src="logo.png" alt="ensō logo" class="logo-login" onerror="this.style.display='none';">
-            
+        
             <p>Comunidad Privada Club ensō</p>
 
             <form id="login-form" onsubmit="validarLogin(event)">
@@ -369,10 +483,19 @@
         </div>
     </div>
 
-    <!-- 2. VISTA DASHBOARD DEL CLUB -->
+    <!-- 2. VISTA DASHBOARD -->
     <div id="dashboard-view">
-        <!-- SIDEBAR IZQUIERDA -->
-        <div class="sidebar">
+        <!-- BARRA SUPERIOR PARA MÓVIL -->
+        <div class="mobile-header">
+            <img src="logo.png" alt="ensō logo" onerror="this.style.display='none';">
+            <button class="btn-hamburger" onclick="toggleMenu()">☰</button>
+        </div>
+
+        <!-- OVERLAY DE CORTINA EN MÓVIL -->
+        <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+        <!-- SIDEBAR DE NAVEGACIÓN -->
+        <div class="sidebar" id="sidebar">
             <div>
                 <img src="logo.png" alt="ensō logo" class="logo-sidebar" onerror="this.style.display='none';">
                 <ul class="menu-list">
@@ -385,13 +508,13 @@
                     <li><a href="https://wa.link/53w0gm" target="_blank">✉️ Contáctanos</a></li>
                 </ul>
             </div>
-            <a href="#" onclick="logout()" style="color: #E8EBE4; font-size: 12px; text-decoration: none; text-align: center;">🔒 Cerrar Sesión</a>
+            <a href="#" onclick="logout()" style="color: #E8EBE4; font-size: 12px; text-decoration: none; text-align: center; margin-top: 20px;">🔒 Cerrar Sesión</a>
         </div>
 
-        <!-- CONTENIDO CENTRAL -->
+        <!-- CONTENIDO PRINCIPAL -->
         <div class="main-content">
             <div id="home-section">
-                <!-- LOGO EN TAMAÑO GRANDE EN EL HEADER PRINCIPAL -->
+                <!-- LOGO GRANDE PARA ESCRITORIO -->
                 <div class="main-header-logo">
                     <img src="logo.png" alt="ensō logo" onerror="this.style.display='none'">
                 </div>
@@ -401,29 +524,27 @@
                     <img src="banner.jpg" alt="Club ensō Banner" onerror="this.parentElement.style.display='none'">
                 </div>
 
-                <!-- IDENTIDAD Y MANIFIESTO DE MARCA -->
+                <!-- IDENTIDAD Y MANIFIESTO -->
                 <div class="brand-manifesto">
                     <h3>Unidad de Origen: Piel & Mente</h3>
                     <p>ENSO es una marca de cuidado fundada sobre la idea central de la unidad de origen entre piel y mente.<br><br>
-                    Inspirada en la <strong>“psicodermatología”</strong>, pone énfasis en que <em>“lo que tu mente siente, tu piel lo narra”</em> – una filosofía que reconoce la conexión psicológica de la piel con la identidad y el bienestar interno (p. ej., el ectodermo como tejido común de piel y sistema nervioso).<br><br>
-                    Su mensaje clave es que ENSO no solo trata síntomas externos, sino que <strong>restaura el diálogo sagrado entre tu interior y tu exterior</strong>, convirtiendo el cuidado de la piel en un acto de reconocimiento del origen indivisible del ser.</p>
+                    Inspirada en la <strong>“psicodermatología”</strong>, pone énfasis en que <em>“lo que tu mente siente, tu piel lo narra”</em> – una filosofía que reconoce la conexión psicológica de la piel con la identidad y el bienestar interno.<br><br>
+                    Su mensaje clave es que ENSO no solo trata síntomas externos, sino que <strong>restaura el diálogo sagrado entre tu interior y tu exterior</strong>, convirtiendo el cuidado de la piel en un acto de recognition del origen indivisible del ser.</p>
                 </div>
 
-                <!-- MATRIZ 2X2 CON TARJETAS GRANDES Y DETALLADAS -->
+                <!-- GRID 2X2 RESPONSIVE -->
                 <div class="apps-grid-2x2">
-                    <!-- APP 1: CLIMA -->
                     <div class="app-card-large" onclick="mostrarIframe('https://clima.ensocare.com.co')">
                         <div>
                             <h4>⛅ App Clima & Exposoma</h4>
-                            <p class="app-desc">Monitoreo ambiental inteligente en tiempo real que evalúa la radiación UV, humedad y factores ambientales de tu ubicación.</p>
+                            <p class="app-desc">Monitoreo ambiental inteligente en tiempo real que evalúa la radiación UV, humedad y factores de tu ubicación.</p>
                         </div>
                         <div class="app-benefits">
                             <strong>Beneficios Clave:</strong>
-                            Previene el estrés oxidativo adaptando la protección de tu barrera cutánea según las condiciones climáticas del día.
+                            Previene el estrés oxidativo adaptando la protección de tu barrera cutánea.
                         </div>
                     </div>
 
-                    <!-- APP 2: RITUAL -->
                     <div class="app-card-large" onclick="mostrarIframe('https://ritual.ensocare.com.co')">
                         <div>
                             <h4>🧘 Spa Facial & Ritual Guiado</h4>
@@ -431,62 +552,58 @@
                         </div>
                         <div class="app-benefits">
                             <strong>Beneficios Clave:</strong>
-                            Reduce el cortisol cutáneo, favorece la respiración consciente y maximiza la absorción celular de principios activos.
+                            Reduce el cortisol cutáneo y maximiza la absorción celular de principios activos.
                         </div>
                     </div>
 
-                    <!-- APP 3: EQUILIBRIO -->
                     <div class="app-card-large" onclick="mostrarIframe('https://equilibrio.ensocare.com.co')">
                         <div>
                             <h4>⚖️ Calculadora de Equilibrio</h4>
-                            <p class="app-desc">Evaluación holística que analiza el balance psico-emocional y su impacto directo en el ecosistema de la piel.</p>
+                            <p class="app-desc">Evaluación holística que analiza el balance psico-emocional y su impacto directo en el ecosistema cutáneo.</p>
                         </div>
                         <div class="app-benefits">
                             <strong>Beneficios Clave:</strong>
-                            Identifica detonantes de sensibilidad y ofrece recomendaciones personalizadas para restaurar la homeostasis neurocutánea.
+                            Identifica detonantes de sensibilidad y ofrece recomendaciones personalizadas.
                         </div>
                     </div>
 
-                    <!-- APP 4: VALORACIÓN BIOMÉTRICA -->
                     <div class="app-card-large" onclick="mostrarIframe('https://valoracion.ensocare.com.co')">
                         <div>
                             <h4>🔍 Valoración Biométrica Facial</h4>
-                            <p class="app-desc">Diagnóstico computacional dinámico de 6 zonas clave del rostro para medir métricas de hidratación, tono y firmeza.</p>
+                            <p class="app-desc">Diagnóstico computacional dinámico de 6 zonas clave del rostro para medir hidratación, tono y firmeza.</p>
                         </div>
                         <div class="app-benefits">
                             <strong>Beneficios Clave:</strong>
-                            Permite un seguimiento preciso de la evolución de tu piel con recomendaciones específicas para tu estado actual.
+                            Seguimiento preciso de la evolución de tu piel con métricas en tiempo real.
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- CONTENEDOR PARA EMBEBER LAS APPS EN PANTALLA COMPLETA -->
-            <iframe id="iframe-container" src=""></iframe>
+            <!-- EMBED RESPONSIVE PARA APPS -->
+            <div id="iframe-wrapper">
+                <iframe id="iframe-container" src=""></iframe>
+            </div>
 
-            <!-- FOOTER CON BOTONES DE ICONOS SVG OFICIALES -->
+            <!-- FOOTER CON BOTONES CON ÍCONOS -->
             <footer>
                 <div>© 2026 ensō care. Todos los derechos reservados.</div>
                 <div class="social-links-buttons">
-                    <!-- WHATSAPP -->
                     <a href="https://wa.link/53w0gm" target="_blank" class="social-btn">
                         <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
                         WhatsApp
                     </a>
 
-                    <!-- CORREO -->
                     <a href="mailto:info.ensocare@gmail.com" class="social-btn">
                         <svg viewBox="0 0 24 24"><path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.104 10-8.104v11.817h-20z"/></svg>
                         Correo
                     </a>
 
-                    <!-- INSTAGRAM -->
                     <a href="https://www.instagram.com/ensocare.co" target="_blank" class="social-btn">
                         <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                         Instagram
                     </a>
 
-                    <!-- TIKTOK -->
                     <a href="https://www.tiktok.com/@ensocare.co" target="_blank" class="social-btn">
                         <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.82.56-1.36 1.51-1.38 2.51-.01.8.31 1.59.87 2.14.57.57 1.37.88 2.18.86 1.02-.01 2.01-.54 2.53-1.42.32-.54.49-1.17.48-1.8.02-3.99.01-7.98.01-11.97z"/></svg>
                         TikTok
@@ -497,7 +614,6 @@
     </div>
 
     <script>
-        // PEGA AQUÍ LA URL DE TU GOOGLE APPS SCRIPT
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwfsRzqdhHeAqCbtxPpWQdt9mfxnPsAp4S_qs-mz_-0SC6Ip98JNXXLuXzJj-T3hMZAWw/exec";
 
         async function validarLogin(e) {
@@ -534,18 +650,30 @@
             }
         }
 
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+
         function mostrarIframe(url) {
             document.getElementById('home-section').style.display = 'none';
+            const wrapper = document.getElementById('iframe-wrapper');
             const iframe = document.getElementById('iframe-container');
             iframe.src = url;
-            iframe.style.display = 'block';
+            wrapper.style.display = 'block';
+
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
         }
 
         function mostrarSeccion(sec) {
             if (sec === 'home') {
-                document.getElementById('iframe-container').style.display = 'none';
+                document.getElementById('iframe-wrapper').style.display = 'none';
                 document.getElementById('iframe-container').src = '';
                 document.getElementById('home-section').style.display = 'block';
+
+                document.getElementById('sidebar').classList.remove('active');
+                document.getElementById('overlay').classList.remove('active');
             }
         }
 
